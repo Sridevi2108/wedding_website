@@ -1,0 +1,6 @@
+{
+  "name": "C. Vignesh & S. Pavithra - Royal South Indian Wedding",
+  "description": "Auspicious wedding invitation for C. Vignesh & S. Pavithra featuring Dravidian temple aesthetics, events in Ooty & Madurai, and an interactive 3D Blessings Tree.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

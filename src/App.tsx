@@ -1,0 +1,192 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { Blessing } from './data/weddingConfig';
+import { Navbar } from './components/layout/Navbar';
+import { HeroSection } from './components/sections/HeroSection';
+import { PlantBlessingModal } from './components/tree/PlantBlessingModal';
+import { AdminModal } from './components/admin/AdminModal';
+import { JasmineGarlandHeader } from './components/ui/TraditionalBorders';
+
+export default function App() {
+  const [blessings, setBlessings] = useState<Blessing[]>([]);
+  const [isPlantModalOpen, setIsPlantModalOpen] = useState(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  // Keep the public tree synchronized with newly approved blessings.
+  const fetchBlessings = useCallback(async () => {
+    try {
+      const res = await fetch('/api/blessings');
+      const data = await res.json();
+      if (!res.ok || !data.success || !Array.isArray(data.blessings)) {
+        throw new Error(data.error || 'Unable to load approved blessings.');
+      }
+      setBlessings((current) => {
+        const isUnchanged =
+          current.length === data.blessings.length &&
+          current.every((blessing, index) => {
+            const nextBlessing = data.blessings[index] as Blessing;
+            return blessing.id === nextBlessing.id && blessing.message === nextBlessing.message;
+          });
+        return isUnchanged ? current : data.blessings;
+      });
+    } catch (err) {
+      console.warn('Live blessings refresh failed:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchBlessings();
+    const refreshVisiblePage = () => {
+      if (document.visibilityState === 'visible') fetchBlessings();
+    };
+    const intervalId = window.setInterval(refreshVisiblePage, 5000);
+    document.addEventListener('visibilitychange', refreshVisiblePage);
+    window.addEventListener('focus', refreshVisiblePage);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', refreshVisiblePage);
+      window.removeEventListener('focus', refreshVisiblePage);
+    };
+  }, [fetchBlessings]);
+
+  // Track active section on scroll through the unified movie runway
+  useEffect(() => {
+    const handleScroll = () => {
+      const runway = document.getElementById('home');
+      if (runway) {
+        const rect = runway.getBoundingClientRect();
+        const totalScroll = runway.offsetHeight - window.innerHeight;
+        if (totalScroll > 0) {
+          const currentScroll = -rect.top;
+          const p = Math.min(Math.max(currentScroll / totalScroll, 0), 1);
+          if (p < 0.12) setActiveSection('home');
+          else if (p < 0.49) setActiveSection('couple');
+          else if (p < 0.63) setActiveSection('events');
+          else if (p < 0.76) setActiveSection('venue');
+          else if (p < 0.88) setActiveSection('invitation');
+          else setActiveSection('blessings');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    const targets: Record<string, number> = {
+      home: 0.00,
+      couple: 0.20,
+      events: 0.54,
+      venue: 0.68,
+      invitation: 0.81,
+      blessings: 0.92,
+      'blessing-tree': 0.92,
+    };
+    const targetP = targets[id] ?? 0;
+    const runway = document.getElementById('home');
+    if (runway) {
+      const totalScroll = runway.offsetHeight - window.innerHeight;
+      const targetY = runway.offsetTop + targetP * totalScroll;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+  };
+
+  const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
+
+  return (
+    <div className="min-h-screen bg-[#F8F2E7] text-[#45352A] flex flex-col selection:bg-[#C49A58]/25 selection:text-[#45352A]">
+      {/* Navigation Bar */}
+      <Navbar
+        activeSection={activeSection}
+        onPlantBlessingClick={() => setIsPlantModalOpen(true)}
+        onAdminClick={() => setIsAdminModalOpen(true)}
+        onNavClick={scrollToSection}
+      />
+
+      {/* Royal Slide-in Menu Drawer (Triggered by in-hero 'Menu' button) */}
+      {isMenuDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex items-start justify-start bg-black/40 backdrop-blur-xs animate-fadeIn">
+          <div className="w-80 max-w-[85vw] h-full bg-[#FFFDF9] border-r-2 border-[#C49A58] p-6 shadow-2xl flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-4 border-b border-[#E5D8C4] mb-6">
+                <div>
+                  <span className="font-serif-royal font-bold text-lg text-[#45352A]">Vignesh &amp; Pavithra</span>
+                  <span className="block text-[10px] font-serif-royal uppercase text-[#98502F]">Royal Wedding Celebration</span>
+                </div>
+                <button
+                  onClick={() => setIsMenuDrawerOpen(false)}
+                  className="p-1.5 text-[#766B60] hover:text-[#98502F] rounded-full hover:bg-[#FAF5EC]"
+                  aria-label="Close menu"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-1 font-serif-royal text-sm">
+                {[
+                  { id: 'home', label: 'Home' },
+                  { id: 'couple', label: 'The Couple' },
+                  { id: 'events', label: 'Events Timeline' },
+                  { id: 'venue', label: 'Wedding Venues' },
+                  { id: 'invitation', label: 'Digital Invitation' },
+                  { id: 'blessings', label: 'Post Your Blessings' },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setIsMenuDrawerOpen(false);
+                      scrollToSection(item.id);
+                    }}
+                    className="w-full text-left px-3.5 py-2.5 rounded-xl hover:bg-[#FAF5EC] text-[#45352A] hover:text-[#98502F] transition-all cursor-pointer"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-[#E5D8C4] space-y-3">
+              <button
+                onClick={() => {
+                  setIsMenuDrawerOpen(false);
+                  setIsPlantModalOpen(true);
+                }}
+                className="w-full py-2.5 bg-gradient-to-r from-[#D48B28] to-[#98502F] hover:brightness-105 text-white rounded-xl font-serif-royal text-xs font-semibold shadow-xs cursor-pointer"
+              >
+                Post Your Blessings
+              </button>
+              <div className="text-center text-[11px] text-[#766B60] font-serif-royal">
+                Monday, 14 December 2026 • Ooty &amp; Madurai
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <main className="flex-1">
+        {/* ── 100% Unified 3D Temple Scrollytelling Movie Runway ── */}
+        <HeroSection
+          blessings={blessings}
+          onPlantBlessingClick={() => setIsPlantModalOpen(true)}
+          onOpenMenu={() => setIsMenuDrawerOpen(true)}
+        />
+      </main>
+
+      {/* Plant Blessing Modal Dialog */}
+      <PlantBlessingModal
+        isOpen={isPlantModalOpen}
+        onClose={() => setIsPlantModalOpen(false)}
+        onBlessingSubmitted={fetchBlessings}
+      />
+
+      {/* Admin Moderation Modal Dialog */}
+      <AdminModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
+        onBlessingsModified={fetchBlessings}
+      />
+    </div>
+  );
+}

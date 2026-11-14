@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+.font-serif-royal {
+  font-family: 'Cinzel', serif;
+}
+
+.font-cormorant {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-script {
+  font-family: 'Great Vibes', cursive;
+}
+
+/* Custom delicate gold scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F2E7;
+}
+::-webkit-scrollbar-thumb {
+  background: #C49A58;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #98502F;
+}
+
+/* Subtle kolam subtle background texture */
+.bg-kolam-pattern {
+  background-color: #F8F2E7;
+  background-image: radial-gradient(#C49A58 0.75px, transparent 0.75px), radial-gradient(#98502F 0.75px, #F8F2E7 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  background-blend-mode: multiply;
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #98502F 0%, #C49A58 50%, #7A5328 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border {
+  border-color: #E5D8C4;
+}
+
+/* 3D Transform & Perspective Utilities */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-1500 {
+  perspective: 1500px;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* ── Cinematic Keyframe Animations ── */
+@keyframes float-petal {
+  0% {
+    transform: translateY(-10px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  90% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(100vh) translateX(60px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-float-petal {
+  animation: float-petal 12s linear infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.5deg);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+@keyframes diya-flicker {
+  0%, 100% {
+    opacity: 0.95;
+    transform: scale(1);
+    filter: drop-shadow(0 0 8px rgba(255, 185, 70, 0.75));
+  }
+  30% {
+    opacity: 0.82;
+    transform: scale(0.96) translate(0.5px, -0.5px);
+    filter: drop-shadow(0 0 5px rgba(255, 170, 50, 0.60));
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04) translate(-0.5px, 0.5px);
+    filter: drop-shadow(0 0 12px rgba(255, 205, 90, 0.90));
+  }
+  80% {
+    opacity: 0.88;
+    transform: scale(0.98);
+    filter: drop-shadow(0 0 7px rgba(255, 180, 60, 0.70));
+  }
+}
+
+.animate-diya {
+  animation: diya-flicker 2.5s ease-in-out infinite;
+}
+
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 238, 190, 0.45) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: gold-shimmer 4s infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes firefly-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(0.8);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translate(15px, -20px) scale(1.2);
+    opacity: 0.85;
+  }
+  66% {
+    transform: translate(-10px, -40px) scale(0.9);
+    opacity: 0.5;
+  }
+}
+
+.animate-firefly {
+  animation: firefly-float 8s ease-in-out infinite;
+}
+
