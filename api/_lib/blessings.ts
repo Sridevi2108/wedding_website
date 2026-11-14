@@ -68,6 +68,10 @@ export function requireSupabaseConfig(): { url: string; key: string } {
   return { url: url.replace(/\/+$/, ''), key };
 }
 
+export function isSupabaseConfigurationError(error: unknown): boolean {
+  return error instanceof Error && error.message.startsWith('Blessings database is not configured.');
+}
+
 async function databaseRequest<T>(resource: string, init: RequestInit = {}): Promise<T> {
   const { url, key } = requireSupabaseConfig();
   const response = await fetch(`${url}/rest/v1/${resource}`, {

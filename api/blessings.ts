@@ -2,6 +2,7 @@ import type { ServerResponse } from 'node:http';
 import {
   getBody,
   insertBlessing,
+  isSupabaseConfigurationError,
   listBlessings,
   requireSupabaseConfig,
   sendJson,
@@ -18,7 +19,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
       return sendJson(response, 200, { success: true, totalCount: blessings.length, blessings });
     } catch (error) {
       console.error('Unable to load public blessings:', error);
-      return sendJson(response, 500, {
+      return sendJson(response, isSupabaseConfigurationError(error) ? 503 : 500, {
         success: false,
         error: error instanceof Error ? error.message : 'Unable to load blessings.',
       });
@@ -71,7 +72,7 @@ export default async function handler(request: ApiRequest, response: ServerRespo
     });
   } catch (error) {
     console.error('Unable to save submitted blessing:', error);
-    return sendJson(response, 500, {
+    return sendJson(response, isSupabaseConfigurationError(error) ? 503 : 500, {
       success: false,
       error: error instanceof Error ? error.message : 'Your blessing could not be saved.',
     });

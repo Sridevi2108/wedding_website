@@ -3,6 +3,7 @@ import {
   deleteBlessing,
   getAdminPasscode,
   getBody,
+  isSupabaseConfigurationError,
   isValidAdminToken,
   listBlessings,
   sendJson,
@@ -18,7 +19,7 @@ function toCsvValue(value: string): string {
 
 function sendFailure(response: ServerResponse, error: unknown): void {
   console.error('Admin blessing API request failed:', error);
-  sendJson(response, 500, {
+  sendJson(response, isSupabaseConfigurationError(error) ? 503 : 500, {
     success: false,
     error: error instanceof Error ? error.message : 'The admin request failed.',
   });

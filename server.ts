@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import {
   deleteBlessing,
   insertBlessing,
+  isSupabaseConfigurationError,
   listBlessings,
   updateBlessingStatus,
 } from './api/_lib/blessings';
@@ -21,7 +22,7 @@ app.use(express.json({ limit: '1mb' }));
 function reportStorageError(res: Response, action: string, error: unknown) {
   console.error(`${action}:`, error);
   const message = error instanceof Error ? error.message : 'Unexpected Supabase error.';
-  const isConfigurationError = message.startsWith('Blessings database is not configured');
+  const isConfigurationError = isSupabaseConfigurationError(error);
   return res.status(isConfigurationError ? 503 : 502).json({
     success: false,
     error: isConfigurationError ? message : 'Blessings could not be loaded from Supabase. Check the server logs and database configuration.',
