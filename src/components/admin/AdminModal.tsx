@@ -42,6 +42,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       const res = await fetch('/api/admin/blessings', {
         headers: { Authorization: `Bearer ${token}` },
       });
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('Admin server is currently unavailable. Please verify the server is running.');
+      }
       const data = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data.error || 'Failed to fetch admin data.');
@@ -65,6 +69,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ passcode }),
       });
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('Admin server is currently unavailable. Please verify the server is running.');
+      }
       const data = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data.error || 'Incorrect passcode.');

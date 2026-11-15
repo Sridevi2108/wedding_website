@@ -5,6 +5,7 @@ import { HeroSection } from './components/sections/HeroSection';
 import { PlantBlessingModal } from './components/tree/PlantBlessingModal';
 import { AdminModal } from './components/admin/AdminModal';
 import { JasmineGarlandHeader } from './components/ui/TraditionalBorders';
+import { fetchLiveBlessings } from './utils/supabaseBlessings';
 
 export default function App() {
   const [blessings, setBlessings] = useState<Blessing[]>([]);
@@ -13,23 +14,42 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   // Keep the public tree synchronized with newly approved blessings.
   const fetchBlessings = useCallback(async () => {
+    let serverBlessings: Blessing[] = [];
     try {
-      const res = await fetch('/api/blessings');
-      const data = await res.json();
-      if (!res.ok || !data.success || !Array.isArray(data.blessings)) {
-        throw new Error(data.error || 'Unable to load approved blessings.');
+      serverBlessings = (await fetchLiveBlessings()) as Blessing[];
+    } catch (err) {
+      console.warn('Live blessings refresh notice:', err);
+    }
+
+    // Merge with any blessings submitted in local storage
+    let localBlessings: Blessing[] = [];
+    try {
+      const raw = localStorage.getItem('wedding_local_blessings');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) localBlessings = parsed;
       }
+    } catch (e) {
+      console.warn('LocalStorage read notice:', e);
+    }
+
+    const combined = [...localBlessings];
+    for (const b of serverBlessings) {
+      if (!combined.some((item) => item.id === b.id)) {
+        combined.push(b);
+      }
+    }
+
+    if (combined.length > 0) {
       setBlessings((current) => {
         const isUnchanged =
-          current.length === data.blessings.length &&
+          current.length === combined.length &&
           current.every((blessing, index) => {
-            const nextBlessing = data.blessings[index] as Blessing;
+            const nextBlessing = combined[index] as Blessing;
             return blessing.id === nextBlessing.id && blessing.message === nextBlessing.message;
           });
-        return isUnchanged ? current : data.blessings;
+        return isUnchanged ? current : combined;
       });
-    } catch (err) {
-      console.warn('Live blessings refresh failed:', err);
     }
   }, []);
 

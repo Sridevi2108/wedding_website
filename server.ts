@@ -1,4 +1,8 @@
 import 'dotenv/config';
+import dotenv from 'dotenv';
+dotenv.config();
+dotenv.config({ path: '.env.txt' });
+dotenv.config({ path: '.env.local' });
 import express, { Request, Response } from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
