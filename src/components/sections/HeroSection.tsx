@@ -576,18 +576,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </p>
             </div>
 
-            {/* 4. INVITATION SCROLL BUTTON */}
-            <button
-              onClick={() => {
-                const el = document.getElementById('couple');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-                else window.scrollTo({ top: window.innerHeight * 1.5, behavior: 'smooth' });
-              }}
-              className="mt-2 sm:mt-4 inline-flex flex-col items-center justify-center bg-gradient-to-b from-[#A0451A] via-[#8C3814] to-[#73290D] border-2 border-[#D4A359] px-7 py-2.5 rounded-full shadow-md text-white font-serif-royal text-[10.5px] xs:text-[11.5px] sm:text-xs font-bold uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all cursor-pointer"
-            >
-              <span className="leading-tight">Scroll Down to See the Invitation</span>
-              <ChevronDown className="w-3.5 h-3.5 text-[#FFF1B8] mt-0.5 animate-bounce" />
-            </button>
+
 
           </div>
         </div>
@@ -1705,30 +1694,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </svg>
           </div>
 
-          <div className="relative z-10 max-w-4xl lg:max-w-5xl w-full mx-auto px-2 py-1 text-center">
-            {/* Header (Exact reference design match) */}
-            <div className="mb-4">
+          <div className="relative z-10 max-w-4xl lg:max-w-5xl w-full mx-auto px-2 py-0 text-center">
+            {/* Header */}
+            <div className="mb-2 sm:mb-3">
               <div className="flex justify-center mb-1">
-                {/* Traditional Gold Lotus Flourish */}
                 <svg width="26" height="15" viewBox="0 0 26 15" fill="none" className="text-[#C49A58]">
                   <path d="M13 1 C11 5 7 7 2 8 C7 9 11 11 13 15 C15 11 19 9 24 8 C19 7 15 5 13 1 Z" fill="#C49A58" opacity="0.9" />
                   <circle cx="13" cy="8" r="1.5" fill="#98502F" />
                 </svg>
               </div>
-
               <div className="inline-flex items-center space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-4 py-0.5 rounded-full shadow-2xs mb-1">
                 <span className="text-xs text-[#C49A58]">✦</span>
                 <span className="text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-                  Sacred Wedding Destinations
+                  Wedding Venues
                 </span>
                 <span className="text-xs text-[#C49A58]">✦</span>
               </div>
-
-              <h2 className="font-serif-royal text-xl sm:text-3xl lg:text-4xl font-bold text-[#45352A] tracking-normal mb-0.5 sm:mb-1">
-                The Sacred Destinations
+              <h2 className="font-serif-royal text-xl sm:text-3xl lg:text-4xl font-bold text-[#45352A] tracking-normal mb-0.5">
+                Our Sacred Venues
               </h2>
-
-              <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
+              <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-1 sm:mb-2">
                 <div className="h-[1px] w-6 sm:w-16 bg-gradient-to-r from-transparent to-[#C49A58]/70" />
                 <p className="font-cormorant italic text-xs sm:text-sm text-[#766B60]">
                   Two beautiful venues, one blessed celebration
@@ -1789,13 +1774,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </button>
                       </div>
 
-                      {/* Climate / Travel Guide Box */}
-                      {venue.travelGuide?.climateTips && (
-                        <div className="flex items-center space-x-2 text-[9px] sm:text-[11px] text-[#6E6053] bg-[#FAF5EC]/90 border border-[#E5D8C4] px-2 sm:px-3 py-1 sm:py-2 rounded-xl mb-2 sm:mb-4">
-                          <Sun className="w-3.5 h-3.5 text-[#C49A58] shrink-0" />
-                          <span className="leading-tight">{venue.travelGuide.climateTips}</span>
-                        </div>
-                      )}
+
                     </div>
 
                     {/* Full Width Google Maps Button */}
