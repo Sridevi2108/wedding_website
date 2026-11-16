@@ -236,6 +236,231 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     setTimeout(() => setCopiedId(null), 2500);
   };
 
+  const handleDownloadBlessingsPDF = () => {
+    if (!blessings || blessings.length === 0) {
+      alert('No blessings recorded yet to download.');
+      return;
+    }
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      window.print();
+      return;
+    }
+
+    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding Blessings — C. Vignesh &amp; S. Pavithra</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
+    
+    @page {
+      size: A4;
+      margin: 14mm 14mm 14mm 14mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      background: #FFFDF9;
+      color: #3E2723;
+      margin: 0;
+      padding: 24px;
+    }
+
+    .no-print-bar {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 12px;
+      background: #FAF5EC;
+      border: 1px solid #C49A58;
+      border-radius: 12px;
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #D48B28, #98502F);
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 9999px;
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(152, 80, 47, 0.25);
+    }
+
+    .header-box {
+      text-align: center;
+      border-bottom: 2px solid #C49A58;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+    }
+
+    .ganesha-title {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: #98502F;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: #8C321A;
+      margin: 4px 0;
+      letter-spacing: 0.04em;
+    }
+
+    .event-info {
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      color: #98502F;
+      font-weight: 700;
+      margin: 4px 0;
+    }
+
+    .subtitle {
+      font-style: italic;
+      color: #766B60;
+      font-size: 14px;
+      margin-top: 6px;
+    }
+
+    .count-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 3px 14px;
+      border-radius: 9999px;
+      background: #FAF5EC;
+      border: 1px solid #D4A359;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #7D321B;
+    }
+
+    .blessings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .blessing-card {
+      border: 1px solid #D4A359;
+      background: #FFFDF9;
+      border-radius: 12px;
+      padding: 12px 16px;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .guest-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px dashed #E5D8C4;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+
+    .guest-name {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #98502F;
+    }
+
+    .guest-time {
+      font-size: 11px;
+      color: #8C827A;
+      font-style: italic;
+    }
+
+    .guest-message {
+      font-size: 14px;
+      font-style: italic;
+      color: #3E2723;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .doc-footer {
+      text-align: center;
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid #E5D8C4;
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      color: #766B60;
+    }
+
+    @media print {
+      .no-print-bar { display: none; }
+      body { padding: 0; background: #FFF; }
+      .blessing-card { box-shadow: none; border: 1px solid #C49A58; }
+    }
+  </style>
+</head>
+<body>
+  <div class="no-print-bar">
+    <button class="btn-save" onclick="window.print()">📥 Save as PDF / Print Document</button>
+  </div>
+
+  <div class="header-box">
+    <div class="ganesha-title">卐 &nbsp; Om Shree Ganeshay Namah &nbsp; 卐</div>
+    <div class="main-title">Royal Wedding Blessings</div>
+    <div class="event-info">C. Vignesh &amp; S. Pavithra • 14 December 2026 • Ooty &amp; Madurai</div>
+    <div class="subtitle">&ldquo;A treasured keepsake of heartfelt prayers, love, and warm wishes.&rdquo;</div>
+    <div class="count-badge">🌸 ${blessings.length} Wedding Blessings Received</div>
+  </div>
+
+  <div class="blessings-grid">
+    ${blessings
+      .map(
+        (b) => `
+      <div class="blessing-card">
+        <div class="guest-header">
+          <span class="guest-name">${(b.guestName || 'Well Wisher').replace(/</g, '&lt;')}</span>
+          <span class="guest-time">${b.createdAt ? new Date(b.createdAt).toLocaleDateString() : '14 Dec 2026'}</span>
+        </div>
+        <p class="guest-message">&ldquo;${(b.message || '').replace(/</g, '&lt;')}&rdquo;</p>
+      </div>`
+      )
+      .join('')}
+  </div>
+
+  <div class="doc-footer">
+    ✿ Thank you for blessing our sacred union • Vignesh &amp; Pavithra ✿
+  </div>
+
+  <script>
+    window.onload = function() {
+      setTimeout(function() {
+        window.print();
+      }, 400);
+    };
+  </script>
+</body>
+</html>`;
+
+    printWindow.document.open();
+    printWindow.document.write(htmlContent);
+    printWindow.document.close();
+  };
+
   const handleShareWhatsApp = () => {
     const text = `🌸 *Wedding Invitation: C. Vignesh & S. Pavithra* 🌸\n\nTogether with the family, we cordially invite you to celebrate the auspicious wedding ceremony on *Monday, 14 December 2026* at Ooty, followed by the Grand Reception at Madurai.\n\nPlease plant your blessings on our interactive 3D Blessings Tree:\n${window.location.href}`;
     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
@@ -949,31 +1174,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </svg>
               </div>
 
-              {/* Auspicious Milestone Pill */}
-              <div className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 sm:py-1 rounded-full shadow-2xs mb-1">
-                <span className="text-[10px] sm:text-xs">🪷</span>
-                <span className="text-[9px] sm:text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-                  Sacred Auspicious Milestones
+              {/* Events Timeline Pill */}
+              <div className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3.5 py-0.5 sm:py-1 rounded-full shadow-2xs">
+                <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
+                <span className="text-[10px] sm:text-xs font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
+                  Events Timeline
                 </span>
-                <span className="text-[10px] sm:text-xs">🪷</span>
-              </div>
-
-              {/* Main Heading — Exactly "Events Timeline" as Requested */}
-              <h2 className="font-serif-royal text-xl sm:text-2xl md:text-3xl font-bold text-[#3E2723] tracking-wide mb-0.5 sm:mb-1 uppercase leading-tight">
-                Events Timeline
-              </h2>
-
-              {/* Subtitle with Ornamental Flourish Lines */}
-              <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-                <div className="h-[1px] w-8 sm:w-14 bg-gradient-to-r from-transparent via-[#C49A58] to-[#C49A58]" />
-                <p className="font-cormorant italic text-[11px] sm:text-xs md:text-sm text-[#6E6053]">
-                  A sacred journey from the Nilgiri hills to royal Madurai
-                </p>
-                <div className="h-[1px] w-8 sm:w-14 bg-gradient-to-l from-transparent via-[#C49A58] to-[#C49A58]" />
+                <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
               </div>
             </div>
 
-            {/* Mobile Header: matches Wedding Venues heading style */}
+            {/* Mobile Header */}
             <div className="block md:hidden text-center mb-1 xs:mb-1.5 shrink-0 px-2">
               <div className="flex justify-center mb-0.5">
                 <svg width="22" height="13" viewBox="0 0 26 15" fill="none">
@@ -981,22 +1192,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <circle cx="13" cy="8" r="1.5" fill="#98502F" />
                 </svg>
               </div>
-              <div className="inline-flex items-center space-x-1.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 rounded-full shadow-2xs mb-0.5">
+              <div className="inline-flex items-center space-x-1.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 rounded-full shadow-2xs">
                 <span className="text-[9px] text-[#C49A58]">✦</span>
-                <span className="text-[8px] xs:text-[9px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-                  Sacred Auspicious Milestones
+                <span className="text-[9px] xs:text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
+                  Events Timeline
                 </span>
                 <span className="text-[9px] text-[#C49A58]">✦</span>
-              </div>
-              <h2 className="font-serif-royal text-lg xs:text-xl font-bold text-[#3E2723] tracking-wide mb-0.5 uppercase leading-tight">
-                Events Timeline
-              </h2>
-              <div className="flex items-center justify-center space-x-2 mb-0.5">
-                <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#C49A58]/70" />
-                <p className="font-cormorant italic text-[10px] xs:text-[11px] text-[#6E6053]">
-                  A sacred journey from the Nilgiri hills to royal Madurai
-                </p>
-                <div className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#C49A58]/70" />
               </div>
             </div>
 
@@ -1717,28 +1918,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="relative z-10 max-w-4xl lg:max-w-5xl w-full mx-auto px-2 py-0 text-center">
             {/* Header */}
             <div className="mb-2 sm:mb-3">
-              <div className="flex justify-center mb-1">
+              <div className="flex justify-center mb-0.5 sm:mb-1">
                 <svg width="26" height="15" viewBox="0 0 26 15" fill="none" className="text-[#C49A58]">
                   <path d="M13 1 C11 5 7 7 2 8 C7 9 11 11 13 15 C15 11 19 9 24 8 C19 7 15 5 13 1 Z" fill="#C49A58" opacity="0.9" />
                   <circle cx="13" cy="8" r="1.5" fill="#98502F" />
                 </svg>
               </div>
-              <div className="inline-flex items-center space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-4 py-0.5 rounded-full shadow-2xs mb-1">
+              <div className="inline-flex items-center space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-4 py-0.5 rounded-full shadow-2xs">
                 <span className="text-xs text-[#C49A58]">✦</span>
                 <span className="text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
                   Wedding Venues
                 </span>
                 <span className="text-xs text-[#C49A58]">✦</span>
-              </div>
-              <h2 className="font-serif-royal text-xl sm:text-3xl lg:text-4xl font-bold text-[#45352A] tracking-normal mb-0.5">
-                Our Sacred Venues
-              </h2>
-              <div className="flex items-center justify-center space-x-2 sm:space-x-3 mb-1 sm:mb-2">
-                <div className="h-[1px] w-6 sm:w-16 bg-gradient-to-r from-transparent to-[#C49A58]/70" />
-                <p className="font-cormorant italic text-xs sm:text-sm text-[#766B60]">
-                  Two beautiful venues, one blessed celebration
-                </p>
-                <div className="h-[1px] w-6 sm:w-16 bg-gradient-to-l from-transparent to-[#C49A58]/70" />
               </div>
             </div>
 
@@ -1833,17 +2024,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </svg>
               </div>
 
-              <div className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3.5 py-0.5 rounded-full shadow-2xs mb-1">
+              <div className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3.5 py-0.5 rounded-full shadow-2xs">
                 <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
                 <span className="text-[9px] sm:text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
                   Official Wedding Invitation
                 </span>
                 <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
               </div>
-
-              <h2 className="font-serif-royal text-xl sm:text-3xl font-bold text-[#45352A]">
-                The Royal Patrika
-              </h2>
 
             </div>
 
@@ -2018,7 +2205,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3.5 py-0.5 rounded-full shadow-2xs mb-1">
                 <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
                 <span className="text-[9px] sm:text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-                  Sacred Wedding Blessings
+                  Wedding Blessings
                 </span>
                 <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
               </div>
@@ -2050,20 +2237,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
               </div>
 
-              <button
-                onClick={onPlantBlessingClick}
-                className="inline-flex items-center space-x-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-[#D48B28] via-[#B87333] to-[#98502F] hover:brightness-110 active:scale-98 text-white font-serif-royal font-bold text-[11px] sm:text-xs uppercase tracking-wider rounded-full shadow-md cursor-pointer transition-all shrink-0"
-              >
-                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFF1B8]" />
-                <span>Post Your Blessings</span>
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <button
+                  onClick={onPlantBlessingClick}
+                  className="inline-flex items-center space-x-2 px-4 py-2 sm:px-5 sm:py-2.5 bg-gradient-to-r from-[#D48B28] via-[#B87333] to-[#98502F] hover:brightness-110 active:scale-98 text-white font-serif-royal font-bold text-[11px] sm:text-xs uppercase tracking-wider rounded-full shadow-md cursor-pointer transition-all shrink-0"
+                >
+                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FFF1B8]" />
+                  <span>Post Your Blessings</span>
+                </button>
+                <button
+                  onClick={handleDownloadBlessingsPDF}
+                  className="inline-flex items-center space-x-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 bg-[#FFFDF9] hover:bg-[#FAF5EC] border border-[#C49A58] text-[#98502F] font-serif-royal font-bold text-[11px] sm:text-xs uppercase tracking-wider rounded-full shadow-xs cursor-pointer transition-all shrink-0"
+                  title="Download all blessings as PDF"
+                >
+                  <Download className="w-3.5 h-3.5 text-[#98502F]" />
+                  <span>Download PDF</span>
+                </button>
+              </div>
             </div>
 
-            {/* Live Blessing Count */}
-            <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-2 mb-2 sm:mb-3 px-1">
-              <span className="text-[10px] sm:text-[11px] font-serif-royal font-semibold text-[#766B60] sm:ml-auto">
-                🌸 {blessings.length} Sacred Blessings Received
+            {/* Live Blessing Count & Secondary PDF Download link */}
+            <div className="w-full flex items-center justify-between gap-1.5 sm:gap-2 mb-2 sm:mb-3 px-1">
+              <span className="text-[10px] sm:text-[11px] font-serif-royal font-semibold text-[#766B60]">
+                🌸 {blessings.length} Wedding Blessings Received
               </span>
+              <button
+                onClick={handleDownloadBlessingsPDF}
+                className="inline-flex items-center space-x-1 text-[10px] sm:text-[11px] font-serif-royal font-semibold text-[#98502F] hover:text-[#7D321B] hover:underline cursor-pointer"
+              >
+                <Download className="w-3 h-3 text-[#98502F]" />
+                <span>Download as PDF</span>
+              </button>
             </div>
 
             {/* Blessings Cards Showcase Grid */}
@@ -2131,7 +2335,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#C49A58]" />
               </div>
 
-              <p className="max-w-xl font-cormorant text-xl italic leading-tight sm:text-3xl md:text-4xl text-[#85321D]">
+              <p className="max-w-xl font-cormorant text-base sm:text-xl md:text-2xl italic leading-tight text-[#85321D]">
                 A beautiful beginning,
                 <br />
                 made memorable by you.
@@ -2201,9 +2405,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   C. Vignesh &amp; S. Pavithra — Wedding Invitation
                 </span>
               </div>
-              <p className="text-amber-200/80 font-serif-royal text-xs">
-                Page {invitationPageIndex + 1} of {INVITATION_PAGES.length}: {INVITATION_PAGES[invitationPageIndex].title} ({INVITATION_PAGES[invitationPageIndex].subtitle})
-              </p>
+
             </div>
 
             <div className="flex items-center space-x-2">

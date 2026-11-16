@@ -145,31 +145,17 @@ export const EventsSection: React.FC = () => {
             </svg>
           </div>
 
-          {/* Auspicious Milestone Pill */}
-          <div className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 sm:py-1 rounded-full shadow-2xs mb-1">
-            <span className="text-[10px] sm:text-xs">🪷</span>
-            <span className="text-[9px] sm:text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-              Sacred Auspicious Milestones
+          {/* Events Timeline Pill */}
+          <div className="inline-flex items-center space-x-1.5 sm:space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3.5 py-0.5 sm:py-1 rounded-full shadow-2xs">
+            <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
+            <span className="text-[10px] sm:text-xs font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
+              Events Timeline
             </span>
-            <span className="text-[10px] sm:text-xs">🪷</span>
-          </div>
-
-          {/* Main Heading — Exactly "Events Timeline" as Requested */}
-          <h2 className="font-serif-royal text-xl sm:text-2xl md:text-3xl font-bold text-[#3E2723] tracking-wide mb-0.5 sm:mb-1 uppercase leading-tight">
-            Events Timeline
-          </h2>
-
-          {/* Subtitle with Ornamental Flourish Lines */}
-          <div className="flex items-center justify-center space-x-2 sm:space-x-3">
-            <div className="h-[1px] w-8 sm:w-14 bg-gradient-to-r from-transparent via-[#C49A58] to-[#C49A58]" />
-            <p className="font-cormorant italic text-[11px] sm:text-xs md:text-sm text-[#6E6053]">
-              A sacred journey from the Nilgiri hills to royal Madurai
-            </p>
-            <div className="h-[1px] w-8 sm:w-14 bg-gradient-to-l from-transparent via-[#C49A58] to-[#C49A58]" />
+            <span className="text-[10px] sm:text-xs text-[#C49A58]">✦</span>
           </div>
         </div>
 
-        {/* Mobile Header: matches Wedding Venues heading style */}
+        {/* Mobile Header */}
         <div className="block md:hidden text-center mb-1 xs:mb-1.5 shrink-0 px-2">
           <div className="flex justify-center mb-0.5">
             <svg width="22" height="13" viewBox="0 0 26 15" fill="none">
@@ -177,22 +163,12 @@ export const EventsSection: React.FC = () => {
               <circle cx="13" cy="8" r="1.5" fill="#98502F" />
             </svg>
           </div>
-          <div className="inline-flex items-center space-x-1.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 rounded-full shadow-2xs mb-0.5">
+          <div className="inline-flex items-center space-x-1.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 rounded-full shadow-2xs">
             <span className="text-[9px] text-[#C49A58]">✦</span>
-            <span className="text-[8px] xs:text-[9px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-              Sacred Auspicious Milestones
+            <span className="text-[9px] xs:text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
+              Events Timeline
             </span>
             <span className="text-[9px] text-[#C49A58]">✦</span>
-          </div>
-          <h2 className="font-serif-royal text-lg xs:text-xl font-bold text-[#3E2723] tracking-wide mb-0.5 uppercase leading-tight">
-            Events Timeline
-          </h2>
-          <div className="flex items-center justify-center space-x-2 mb-0.5">
-            <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#C49A58]/70" />
-            <p className="font-cormorant italic text-[10px] xs:text-[11px] text-[#6E6053]">
-              A sacred journey from the Nilgiri hills to royal Madurai
-            </p>
-            <div className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#C49A58]/70" />
           </div>
         </div>
 
