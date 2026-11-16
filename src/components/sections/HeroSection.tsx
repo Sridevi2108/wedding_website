@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WEDDING_CONFIG, EventDetails, Blessing } from '../../data/weddingConfig';
-import { templeAudio } from '../../utils/audioSynth';
+// Wedding music handled via HTML5 Audio element (useRef)
 import {
   GoldDivider,
   CornerOrnament,
@@ -88,6 +88,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   // Target: Monday, 14 December 2026 06:15 AM IST (Asia/Kolkata)
   const targetTime = new Date('2026-12-14T06:15:00+05:30').getTime();
   const runwayRef = useRef<HTMLDivElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const calculateTimeLeft = (): TimeRemaining => {
@@ -185,9 +186,69 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isLightboxOpen]);
 
+  // Initialize audio on first user interaction (auto-play after mount)
+  const initAndPlayAudio = React.useCallback(() => {
+    if (!audioRef.current) {
+      const audio = new Audio('/assets/audio/wedding_music.mp4');
+      audio.loop = true;
+      audio.volume = 0.55;
+      audioRef.current = audio;
+    }
+    audioRef.current.play().then(() => {
+      setIsPlayingMusic(true);
+    }).catch(() => {
+      // Browser blocked autoplay — user must click play button
+    });
+  }, []);
+
+  // Auto-play on first scroll/interaction
+  useEffect(() => {
+    const tryAutoPlay = () => {
+      if (!audioRef.current) {
+        initAndPlayAudio();
+      }
+      window.removeEventListener('scroll', tryAutoPlay);
+      window.removeEventListener('click', tryAutoPlay);
+      window.removeEventListener('touchstart', tryAutoPlay);
+    };
+    // Try immediate autoplay (works on some browsers)
+    if (!audioRef.current) {
+      const audio = new Audio('/assets/audio/wedding_music.mp4');
+      audio.loop = true;
+      audio.volume = 0.55;
+      audioRef.current = audio;
+      audio.play().then(() => {
+        setIsPlayingMusic(true);
+      }).catch(() => {
+        // Will be triggered on first user interaction
+        window.addEventListener('scroll', tryAutoPlay, { once: true });
+        window.addEventListener('click', tryAutoPlay, { once: true });
+        window.addEventListener('touchstart', tryAutoPlay, { once: true });
+      });
+    }
+    return () => {
+      window.removeEventListener('scroll', tryAutoPlay);
+      window.removeEventListener('click', tryAutoPlay);
+      window.removeEventListener('touchstart', tryAutoPlay);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleToggleMusic = () => {
-    const playing = templeAudio.toggle();
-    setIsPlayingMusic(playing);
+    if (!audioRef.current) {
+      initAndPlayAudio();
+      return;
+    }
+    if (isPlayingMusic) {
+      audioRef.current.pause();
+      setIsPlayingMusic(false);
+    } else {
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+    }
   };
 
   const scrollToAnchor = (pTarget: number) => {
@@ -2057,11 +2118,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               }}
               title="Click to view full screen"
             >
-              {/* Corner Ornaments */}
-              <CornerOrnament position="top-left" className="absolute top-2 left-2 w-6 h-6 opacity-75 pointer-events-none" />
-              <CornerOrnament position="top-right" className="absolute top-2 right-2 w-6 h-6 opacity-75 pointer-events-none" />
-              <CornerOrnament position="bottom-left" className="absolute bottom-2 left-2 w-6 h-6 opacity-75 pointer-events-none" />
-              <CornerOrnament position="bottom-right" className="absolute bottom-2 right-2 w-6 h-6 opacity-75 pointer-events-none" />
+
 
               {/* Rendered PDF Page Image */}
               <div className="relative rounded-xl sm:rounded-2xl overflow-hidden shadow-inner border border-[#E5D8C4] bg-white aspect-[894/1258]">
