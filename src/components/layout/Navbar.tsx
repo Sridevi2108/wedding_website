@@ -10,7 +10,7 @@ import {
   Flower2,
   HeartHandshake,
 } from 'lucide-react';
-import { templeAudio } from '../../utils/audioSynth';
+import { weddingAudio } from '../../utils/weddingAudio';
 
 interface NavbarProps {
   activeSection: string;
@@ -35,11 +35,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavClick,
 }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [isPlayingMusic, setIsPlayingMusic] = useState(weddingAudio.getIsPlaying());
+
+  useEffect(() => {
+    weddingAudio.setupAutoPlay();
+    return weddingAudio.subscribe((playing) => setIsPlayingMusic(playing));
+  }, []);
 
   const handleToggleMusic = () => {
-    const playing = templeAudio.toggle();
-    setIsPlayingMusic(playing);
+    weddingAudio.toggle();
   };
 
   const handleNavClick = (id: string) => {
@@ -133,18 +137,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="font-serif-royal text-xs font-bold tracking-wider uppercase text-[#7A3A1B]">Menu</span>
         </button>
 
-        {/* Right Floating Pill: PLAY MUSIC / MUSIC PLAYING */}
+        {/* Right Floating Button: Music Symbol Only (Toggle On / Off) */}
         <button
           onClick={handleToggleMusic}
-          className={`pointer-events-auto flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full border shadow-none font-serif-royal text-[11px] font-bold tracking-wider transition-all active:scale-95 cursor-pointer ${
+          className={`pointer-events-auto p-2 sm:p-2.5 rounded-full border shadow-xs transition-all active:scale-95 cursor-pointer flex items-center justify-center ${
             isPlayingMusic
-              ? 'bg-gradient-to-b from-[#98502F] to-[#7A3E20] border-[#C49A58] text-[#FFF1B8]'
-              : 'bg-gradient-to-b from-[#FFFDF9] to-[#F5EAD4] border-[#C49A58]/80 text-[#7A3A1B] hover:text-[#98502F]'
+              ? 'bg-gradient-to-b from-[#98502F] to-[#7A3E20] border-[#C49A58] text-[#FFF1B8] shadow-[0_0_10px_rgba(196,154,88,0.4)]'
+              : 'bg-gradient-to-b from-[#FFFDF9] to-[#F5EAD4] border-[#C49A58]/80 text-[#7A3A1B]'
           }`}
-          aria-label="Toggle Music"
+          aria-label={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
+          title={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
         >
-          <Music className={`w-3.5 h-3.5 ${isPlayingMusic ? 'text-[#FFF1B8] animate-pulse' : 'text-[#8C3814]'}`} />
-          <span className="uppercase tracking-wider">{isPlayingMusic ? 'Playing' : 'Play Music'}</span>
+          {isPlayingMusic ? (
+            <Volume2 className="w-4 h-4 text-[#FFF1B8] animate-pulse" />
+          ) : (
+            <VolumeX className="w-4 h-4 text-[#8C3814]" />
+          )}
         </button>
       </div>
 

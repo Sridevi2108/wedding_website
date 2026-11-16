@@ -88,7 +88,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   // Target: Monday, 14 December 2026 06:15 AM IST (Asia/Kolkata)
   const targetTime = new Date('2026-12-14T06:15:00+05:30').getTime();
   const runwayRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   const calculateTimeLeft = (): TimeRemaining => {
@@ -109,7 +108,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const [timeLeft, setTimeLeft] = useState<TimeRemaining>(calculateTimeLeft);
   const [pulseSeconds, setPulseSeconds] = useState(false);
-  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   // Events scene state
@@ -185,71 +183,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isLightboxOpen]);
-
-  // Initialize audio on first user interaction (auto-play after mount)
-  const initAndPlayAudio = React.useCallback(() => {
-    if (!audioRef.current) {
-      const audio = new Audio('/assets/audio/wedding_music.mp4');
-      audio.loop = true;
-      audio.volume = 0.55;
-      audioRef.current = audio;
-    }
-    audioRef.current.play().then(() => {
-      setIsPlayingMusic(true);
-    }).catch(() => {
-      // Browser blocked autoplay — user must click play button
-    });
-  }, []);
-
-  // Auto-play on first scroll/interaction
-  useEffect(() => {
-    const tryAutoPlay = () => {
-      if (!audioRef.current) {
-        initAndPlayAudio();
-      }
-      window.removeEventListener('scroll', tryAutoPlay);
-      window.removeEventListener('click', tryAutoPlay);
-      window.removeEventListener('touchstart', tryAutoPlay);
-    };
-    // Try immediate autoplay (works on some browsers)
-    if (!audioRef.current) {
-      const audio = new Audio('/assets/audio/wedding_music.mp4');
-      audio.loop = true;
-      audio.volume = 0.55;
-      audioRef.current = audio;
-      audio.play().then(() => {
-        setIsPlayingMusic(true);
-      }).catch(() => {
-        // Will be triggered on first user interaction
-        window.addEventListener('scroll', tryAutoPlay, { once: true });
-        window.addEventListener('click', tryAutoPlay, { once: true });
-        window.addEventListener('touchstart', tryAutoPlay, { once: true });
-      });
-    }
-    return () => {
-      window.removeEventListener('scroll', tryAutoPlay);
-      window.removeEventListener('click', tryAutoPlay);
-      window.removeEventListener('touchstart', tryAutoPlay);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleToggleMusic = () => {
-    if (!audioRef.current) {
-      initAndPlayAudio();
-      return;
-    }
-    if (isPlayingMusic) {
-      audioRef.current.pause();
-      setIsPlayingMusic(false);
-    } else {
-      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
-    }
-  };
 
   const scrollToAnchor = (pTarget: number) => {
     if (runwayRef.current) {
