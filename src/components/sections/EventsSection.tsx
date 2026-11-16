@@ -169,11 +169,31 @@ export const EventsSection: React.FC = () => {
           </div>
         </div>
 
-        {/* ── Mobile Header: Clean Centered Cormorant Italic Subtitle Matching Mockup Exactly ── */}
-        <div className="block md:hidden text-center mb-1 shrink-0 px-2">
-          <p className="font-cormorant italic text-[11px] xs:text-[12px] text-[#6E6053] tracking-wide">
-            A sacred journey from the Nilgiri hills to royal Madurai
-          </p>
+        {/* Mobile Header: matches Wedding Venues heading style */}
+        <div className="block md:hidden text-center mb-1 xs:mb-1.5 shrink-0 px-2">
+          <div className="flex justify-center mb-0.5">
+            <svg width="22" height="13" viewBox="0 0 26 15" fill="none">
+              <path d="M13 1 C11 5 7 7 2 8 C7 9 11 11 13 15 C15 11 19 9 24 8 C19 7 15 5 13 1 Z" fill="#C49A58" opacity="0.9" />
+              <circle cx="13" cy="8" r="1.5" fill="#98502F" />
+            </svg>
+          </div>
+          <div className="inline-flex items-center space-x-1.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 rounded-full shadow-2xs mb-0.5">
+            <span className="text-[9px] text-[#C49A58]">✦</span>
+            <span className="text-[8px] xs:text-[9px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
+              Sacred Auspicious Milestones
+            </span>
+            <span className="text-[9px] text-[#C49A58]">✦</span>
+          </div>
+          <h2 className="font-serif-royal text-lg xs:text-xl font-bold text-[#3E2723] tracking-wide mb-0.5 uppercase leading-tight">
+            Events Timeline
+          </h2>
+          <div className="flex items-center justify-center space-x-2 mb-0.5">
+            <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#C49A58]/70" />
+            <p className="font-cormorant italic text-[10px] xs:text-[11px] text-[#6E6053]">
+              A sacred journey from the Nilgiri hills to royal Madurai
+            </p>
+            <div className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#C49A58]/70" />
+          </div>
         </div>
 
         {/* ══════════════════════════════════════════════════════════ */}
