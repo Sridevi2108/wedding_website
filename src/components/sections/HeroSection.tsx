@@ -1845,27 +1845,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 The Royal Patrika
               </h2>
 
-              <p className="font-serif-royal text-xs text-[#98502F] tracking-wide mt-0.5 font-semibold">
-                (Hover to tilt · Click to view full screen)
-              </p>
             </div>
 
-            {/* 3-Page Selector Tabs */}
-            <div className="flex items-center justify-center space-x-1.5 sm:space-x-2 mb-2 sm:mb-2.5">
-              {INVITATION_PAGES.map((pg, idx) => (
-                <button
-                  key={pg.page}
-                  onClick={() => setInvitationPageIndex(idx)}
-                  className={`px-3 py-1 rounded-full text-[10.5px] sm:text-xs font-serif-royal font-bold transition-all cursor-pointer ${
-                    invitationPageIndex === idx
-                      ? 'bg-[#98502F] text-white shadow-xs scale-105'
-                      : 'bg-[#FFFDF9]/90 text-[#766B60] hover:text-[#45352A] border border-[#E5D8C4]'
-                  }`}
-                >
-                  {pg.tab}
-                </button>
-              ))}
-            </div>
+
 
             {/* The 3D Interactive Tilt Invitation Card */}
             <div
@@ -1910,13 +1892,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   }}
                 />
 
-                {/* Hover Click to View Full Screen Indicator */}
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
-                  <span className="px-3.5 py-1.5 bg-[#FFFDF9]/95 border border-[#C49A58] text-[#45352A] font-serif-royal text-xs font-bold rounded-full shadow-xl flex items-center space-x-1.5 transform scale-95 group-hover:scale-100 transition-transform">
-                    <Maximize2 className="w-3.5 h-3.5 text-[#98502F]" />
-                    <span>Click to view full screen</span>
-                  </span>
-                </div>
               </div>
 
               {/* Prev / Next Page Chevrons on hover */}
@@ -1945,15 +1920,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Action Bar */}
             <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mt-2.5 sm:mt-3">
-              <button
-                onClick={() => setIsLightboxOpen(true)}
-                className="inline-flex items-center space-x-1.5 px-4 py-1.5 bg-[#98502F] hover:bg-[#7d3f23] text-white rounded-full text-xs font-serif-royal font-bold shadow-md cursor-pointer transition-all active:scale-98"
-              >
-                <Maximize2 className="w-3.5 h-3.5 text-[#FFF1B8]" />
-                <span>Click to view full screen</span>
-              </button>
-
-              <a
+<a
                 href="/assets/invitation/wedding_invitation.pdf"
                 download="C-Vignesh-and-S-Pavithra-Wedding-Invitation.pdf"
                 className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-[#FFFDF9] hover:bg-[#FAF5EC] border border-[#C49A58] text-[#45352A] rounded-full text-xs font-serif-royal font-bold shadow-xs cursor-pointer transition-all active:scale-98"
