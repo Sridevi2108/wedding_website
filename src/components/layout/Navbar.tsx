@@ -4,19 +4,18 @@ import {
   X,
   Volume2,
   VolumeX,
-  Music,
-  Sparkles,
   Lock,
-  Flower2,
-  HeartHandshake,
 } from 'lucide-react';
 import { weddingAudio } from '../../utils/weddingAudio';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavbarProps {
   activeSection: string;
   onPlantBlessingClick: () => void;
   onAdminClick: () => void;
   onNavClick?: (id: string) => void;
+  isDarkTheme: boolean;
+  onThemeToggle: () => void;
 }
 
 const NAV_ITEMS = [
@@ -33,6 +32,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onPlantBlessingClick,
   onAdminClick,
   onNavClick,
+  isDarkTheme,
+  onThemeToggle,
 }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isPlayingMusic, setIsPlayingMusic] = useState(weddingAudio.getIsPlaying());
@@ -109,15 +110,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </div>
 
-          {/* Right: Audio Toggle Button */}
+          {/* Right: Theme and Audio Toggles */}
           <div className="flex items-center space-x-3">
+            <ThemeToggle isDark={isDarkTheme} onToggle={onThemeToggle} />
             <button
+              data-audio-toggle
               onClick={handleToggleMusic}
               className={`p-2 rounded-full border border-[#C49A58]/80 shadow-xs transition-all cursor-pointer ${
                 isPlayingMusic ? 'bg-[#98502F] text-white' : 'bg-[#FFFDF9] text-[#766B60] hover:text-[#45352A]'
               }`}
-              title={isPlayingMusic ? 'Mute' : 'Play Sacred Temple Chimes'}
-              aria-label="Toggle Temple Sound"
+              title={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
+              aria-label={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
             >
               {isPlayingMusic ? <Volume2 className="w-4 h-4 text-[#FFF1B8]" /> : <VolumeX className="w-4 h-4" />}
             </button>
@@ -137,23 +140,27 @@ export const Navbar: React.FC<NavbarProps> = ({
           <span className="font-serif-royal text-xs font-bold tracking-wider uppercase text-[#7A3A1B]">Menu</span>
         </button>
 
-        {/* Right Floating Button: Music Symbol Only (Toggle On / Off) */}
-        <button
-          onClick={handleToggleMusic}
-          className={`pointer-events-auto p-2 sm:p-2.5 rounded-full border shadow-xs transition-all active:scale-95 cursor-pointer flex items-center justify-center ${
-            isPlayingMusic
-              ? 'bg-gradient-to-b from-[#98502F] to-[#7A3E20] border-[#C49A58] text-[#FFF1B8] shadow-[0_0_10px_rgba(196,154,88,0.4)]'
-              : 'bg-gradient-to-b from-[#FFFDF9] to-[#F5EAD4] border-[#C49A58]/80 text-[#7A3A1B]'
-          }`}
-          aria-label={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
-          title={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
-        >
-          {isPlayingMusic ? (
-            <Volume2 className="w-4 h-4 text-[#FFF1B8] animate-pulse" />
-          ) : (
-            <VolumeX className="w-4 h-4 text-[#8C3814]" />
-          )}
-        </button>
+        {/* Right Floating Theme and Music Controls */}
+        <div className="pointer-events-auto flex items-center gap-2">
+          <ThemeToggle isDark={isDarkTheme} onToggle={onThemeToggle} />
+          <button
+            data-audio-toggle
+            onClick={handleToggleMusic}
+            className={`p-2 sm:p-2.5 rounded-full border shadow-xs transition-all active:scale-95 cursor-pointer flex items-center justify-center ${
+              isPlayingMusic
+                ? 'bg-gradient-to-b from-[#98502F] to-[#7A3E20] border-[#C49A58] text-[#FFF1B8] shadow-[0_0_10px_rgba(196,154,88,0.4)]'
+                : 'bg-gradient-to-b from-[#FFFDF9] to-[#F5EAD4] border-[#C49A58]/80 text-[#7A3A1B]'
+            }`}
+            aria-label={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
+            title={isPlayingMusic ? 'Turn Off Music' : 'Turn On Music'}
+          >
+            {isPlayingMusic ? (
+              <Volume2 className="w-4 h-4 text-[#FFF1B8] animate-pulse" />
+            ) : (
+              <VolumeX className="w-4 h-4 text-[#8C3814]" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Drawer Menu & Backdrop (High contrast, clearly visible) */}

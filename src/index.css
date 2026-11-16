@@ -4,6 +4,38 @@
   html {
     scroll-behavior: smooth;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color-scheme: light;
+    --theme-background: #F8F2E7;
+    --theme-background-secondary: #FAF5EC;
+    --theme-surface: #FFFDF9;
+    --theme-text: #45352A;
+    --theme-text-secondary: #766B60;
+    --theme-accent: #C49A58;
+    --theme-highlight: #C49A58;
+    --theme-border: #E5D8C4;
+  }
+
+  html[data-theme='dark'] {
+    color-scheme: dark;
+    --theme-background: #300609;
+    --theme-background-secondary: #3B080D;
+    --theme-surface: #480D13;
+    --theme-text: #E8C477;
+    --theme-text-secondary: #D8B77A;
+    --theme-accent: #C99B48;
+    --theme-highlight: #D5A64F;
+    --theme-border: #C99B48;
+  }
+
+  body,
+  #root {
+    min-height: 100%;
+    background-color: var(--theme-background);
+  }
+
+  html[data-theme='dark'] body,
+  html[data-theme='dark'] #root {
+    color: var(--theme-text);
   }
 }
 
@@ -51,6 +83,259 @@
 
 .gold-border {
   border-color: #E5D8C4;
+}
+
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  width: 58px;
+  height: 32px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 7px;
+  overflow: hidden;
+  border: 1px solid #C49A58;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #FFFDF9 0%, #F5EAD4 100%);
+  color: #7A3A1B;
+  box-shadow: 0 2px 8px rgba(90, 50, 20, 0.12);
+  cursor: pointer;
+  transition: background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid #C49A58;
+  outline-offset: 3px;
+}
+
+.theme-toggle.is-dark {
+  border-color: #C99B48;
+  background: linear-gradient(180deg, #3B080D 0%, #300609 100%);
+  color: #E8C477;
+  box-shadow: 0 0 12px rgba(201, 155, 72, 0.2);
+}
+
+.theme-toggle__icon {
+  z-index: 1;
+  display: flex;
+  width: 16px;
+  height: 16px;
+  align-items: center;
+  justify-content: center;
+  transition: color 250ms ease, opacity 250ms ease;
+}
+
+.theme-toggle__icon svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2;
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(201, 155, 72, 0.45);
+  border-radius: 50%;
+  background: #FFFDF9;
+  box-shadow: 0 1px 5px rgba(61, 29, 13, 0.2);
+  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 250ms ease;
+}
+
+.theme-toggle.is-dark .theme-toggle__thumb {
+  transform: translateX(26px);
+  background: #6A2420;
+}
+
+.theme-toggle.is-light .theme-toggle__icon--sun,
+.theme-toggle.is-dark .theme-toggle__icon--moon {
+  opacity: 1;
+}
+
+.theme-toggle.is-light .theme-toggle__icon--moon,
+.theme-toggle.is-dark .theme-toggle__icon--sun {
+  opacity: 0.58;
+}
+
+html.theme-transition body,
+html.theme-transition #root,
+html.theme-transition [class*='bg-[#'],
+html.theme-transition [class*='text-[#'],
+html.theme-transition [class*='border-[#'] {
+  transition: background-color 350ms ease, color 350ms ease, border-color 350ms ease;
+}
+
+html[data-theme='dark'] body,
+html[data-theme='dark'] #root {
+  background-color: var(--theme-background) !important;
+}
+
+html[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: var(--theme-background);
+}
+
+html[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: var(--theme-accent);
+}
+
+html[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-highlight);
+}
+
+html[data-theme='dark'] ::selection {
+  background: rgba(201, 155, 72, 0.35);
+  color: #F5DEAA;
+}
+
+html[data-theme='dark'] [class*='bg-[#F8F2E7]'],
+html[data-theme='dark'] [class*='bg-[#F6EDDC]'] {
+  background-color: var(--theme-background) !important;
+}
+
+html[data-theme='dark'] [class*='bg-[#FAF5EC]'],
+html[data-theme='dark'] [class*='bg-[#F3EBE0]'],
+html[data-theme='dark'] [class*='bg-[#F3EAD9]'],
+html[data-theme='dark'] [class*='bg-[#F4ECE0]'],
+html[data-theme='dark'] [class*='bg-[#F4ECE1]'],
+html[data-theme='dark'] [class*='bg-[#FAF3E8]'],
+html[data-theme='dark'] [class*='bg-[#F5EAD4]'],
+html[data-theme='dark'] [class*='bg-[#FFF6E5]'],
+html[data-theme='dark'] [class*='bg-[#F5EDE1]'] {
+  background-color: var(--theme-background-secondary) !important;
+}
+
+html[data-theme='dark'] [class*='bg-[#FFFDF9]'],
+html[data-theme='dark'] [class*='bg-[#FFFFFF]'],
+html[data-theme='dark'] [class~='bg-white'] {
+  background-color: var(--theme-surface) !important;
+}
+
+html[data-theme='dark'] [class*='from-[#FFFDF9]'],
+html[data-theme='dark'] [class*='from-[#FAF5EC]'] {
+  background-image: linear-gradient(180deg, var(--theme-surface), var(--theme-background-secondary)) !important;
+}
+
+html[data-theme='dark'] [class*='text-[#45352A]'],
+html[data-theme='dark'] [class*='text-[#3E2723]'],
+html[data-theme='dark'] [class*='text-[#2D1D13]'],
+html[data-theme='dark'] [class*='text-[#2B1A0F]'],
+html[data-theme='dark'] [class*='text-[#3E2C1E]'],
+html[data-theme='dark'] [class*='text-[#4A3B27]'] {
+  color: var(--theme-text) !important;
+}
+
+html[data-theme='dark'] [class*='text-[#766B60]'],
+html[data-theme='dark'] [class*='text-[#6E6053]'],
+html[data-theme='dark'] [class*='text-[#5C4D41]'],
+html[data-theme='dark'] [class*='text-[#9E9182]'],
+html[data-theme='dark'] [class*='text-[#A29688]'],
+html[data-theme='dark'] [class*='text-[#8C827A]'],
+html[data-theme='dark'] [class*='text-[#6E5D4F]'],
+html[data-theme='dark'] [class*='text-[#76533A]'],
+html[data-theme='dark'] [class*='text-[#6E5038]'],
+html[data-theme='dark'] [class*='text-[#5A4535]'] {
+  color: var(--theme-text-secondary) !important;
+}
+
+html[data-theme='dark'] [class*='text-[#98502F]'],
+html[data-theme='dark'] [class*='text-[#8C3A1A]'],
+html[data-theme='dark'] [class*='text-[#7A3E1D]'],
+html[data-theme='dark'] [class*='text-[#7A3A1B]'],
+html[data-theme='dark'] [class*='text-[#7A3E20]'],
+html[data-theme='dark'] [class*='text-[#7D3F23]'],
+html[data-theme='dark'] [class*='text-[#8C3814]'],
+html[data-theme='dark'] [class*='text-[#8C4525]'],
+html[data-theme='dark'] [class*='text-[#8C321A]'],
+html[data-theme='dark'] [class*='text-[#782F13]'],
+html[data-theme='dark'] [class*='text-[#7D321B]'],
+html[data-theme='dark'] [class*='text-[#7A281E]'],
+html[data-theme='dark'] [class*='text-[#7D2D16]'],
+html[data-theme='dark'] [class*='text-[#85321D]'],
+html[data-theme='dark'] [class*='text-[#71351F]'],
+html[data-theme='dark'] [class*='text-[#9B401D]'],
+html[data-theme='dark'] [class*='text-[#9A4A20]'],
+html[data-theme='dark'] [class*='text-[#B87320]'] {
+  color: var(--theme-accent) !important;
+}
+
+html[data-theme='dark'] [class*='text-[#C49A58]'],
+html[data-theme='dark'] [class*='text-[#D4A359]'],
+html[data-theme='dark'] [class*='text-[#D4A76A]'],
+html[data-theme='dark'] [class*='text-[#FFFDF9]'] {
+  color: var(--theme-highlight) !important;
+}
+
+html[data-theme='dark'] [class*='border-[#E5D8C4]'],
+html[data-theme='dark'] [class*='border-[#E8DEC9]'],
+html[data-theme='dark'] [class*='border-[#C49A58]'],
+html[data-theme='dark'] [class*='border-[#D4A359]'] {
+  border-color: var(--theme-accent) !important;
+}
+
+html[data-theme='dark'] [class*='bg-[#98502F]'] {
+  background-color: var(--theme-accent) !important;
+  color: #300609 !important;
+}
+
+html[data-theme='dark'] [class*='from-[#D48B28]'] {
+  background-image: linear-gradient(135deg, #8C3814 0%, #3B080D 100%) !important;
+  color: #F0D18B !important;
+}
+
+html[data-theme='dark'] input,
+html[data-theme='dark'] textarea,
+html[data-theme='dark'] select {
+  color: var(--theme-text);
+}
+
+html[data-theme='dark'] input::placeholder,
+html[data-theme='dark'] textarea::placeholder {
+  color: rgba(216, 183, 122, 0.65);
+}
+
+.theme-dark-architecture {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background-color: #300609;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+.theme-dark-architecture--desktop {
+  background-image: url('/assets/dark-theme/wedding-desktop-reference.png');
+}
+
+.theme-dark-architecture--mobile {
+  background-image: url('/assets/dark-theme/wedding-mobile-reference.png');
+}
+
+html[data-theme='dark'] .theme-ambient-glow {
+  display: none !important;
+}
+
+html[data-theme='dark'] .theme-content-backdrop {
+  display: none !important;
+}
+
+html[data-theme='dark'] .theme-light-architecture {
+  display: none !important;
+}
+
+@media (min-width: 768px) {
+  html[data-theme='dark'] .theme-dark-architecture--desktop {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  html[data-theme='dark'] .theme-dark-architecture--mobile {
+    display: block;
+  }
 }
 
 /* 3D Transform & Perspective Utilities */
@@ -188,5 +473,209 @@
 
 .animate-firefly {
   animation: firefly-float 8s ease-in-out infinite;
+}
+
+@media (max-width: 767px) {
+  .mobile-event-card {
+    margin-block: 0.35rem;
+  }
+
+  .mobile-event-card__visual {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 10px;
+    width: 78px;
+    height: 98px;
+    margin: 0;
+    transform: translateY(-50%);
+  }
+
+  .mobile-event-card__visual img {
+    border-radius: 0.65rem;
+  }
+
+  .mobile-event-card__content {
+    min-height: 144px;
+    padding: 10px 11px 10px 100px;
+    text-align: left;
+  }
+
+  .mobile-event-card__content > .absolute {
+    display: none;
+  }
+
+  .mobile-event-card__eyebrow {
+    justify-content: flex-start;
+  }
+
+  .mobile-event-card__eyebrow > span:last-child {
+    margin-left: auto;
+  }
+
+  .mobile-event-card__title {
+    text-align: left;
+  }
+
+  .mobile-event-card__date {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 2px;
+  }
+
+  .mobile-event-card__location {
+    text-align: left;
+  }
+
+  .mobile-event-card__action {
+    margin-top: 6px;
+  }
+
+  .mobile-event-divider {
+    display: none;
+  }
+}
+
+.wedding-loading-screen {
+  position: fixed;
+  z-index: 110;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, var(--theme-surface) 0%, var(--theme-background) 72%);
+  color: var(--theme-text);
+  opacity: 1;
+  transition: opacity 550ms ease, visibility 550ms ease;
+}
+
+.wedding-loading-screen::before {
+  position: absolute;
+  inset: 20px;
+  border: 1px solid var(--theme-accent);
+  border-radius: 18px;
+  content: '';
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.wedding-loading-screen.is-leaving {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wedding-loading-screen__content {
+  display: flex;
+  max-width: min(90vw, 560px);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: wedding-loading-arrive 700ms ease-out both;
+}
+
+.wedding-loading-screen__om {
+  color: var(--theme-accent);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(3.5rem, 14vw, 5rem);
+  line-height: 1;
+  text-shadow: 0 0 22px rgba(196, 154, 88, 0.35);
+}
+
+.wedding-loading-screen__divider {
+  margin: 0.8rem 0 1rem;
+  color: var(--theme-accent);
+  font-size: 1.15rem;
+}
+
+.wedding-loading-screen__names {
+  margin: 0;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.35rem, 6vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  line-height: 1.35;
+}
+
+.wedding-loading-screen__names span {
+  color: var(--theme-accent);
+}
+
+.wedding-loading-screen__subtitle {
+  margin: 0.65rem 0 0;
+  color: var(--theme-accent);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+}
+
+.wedding-loading-screen__lamp {
+  position: relative;
+  width: 42px;
+  height: 15px;
+  margin-top: 2rem;
+  border: 1px solid var(--theme-accent);
+  border-radius: 50% 50% 45% 45%;
+  background: linear-gradient(180deg, transparent 35%, rgba(196, 154, 88, 0.22));
+}
+
+.wedding-loading-screen__lamp span {
+  position: absolute;
+  bottom: 11px;
+  left: 16px;
+  width: 8px;
+  height: 15px;
+  border-radius: 55% 45% 55% 45%;
+  background: radial-gradient(ellipse at 50% 72%, #fff8cc 0%, #d48b28 58%, transparent 76%);
+  filter: drop-shadow(0 0 7px rgba(212, 139, 40, 0.6));
+  animation: wedding-lamp-flicker 900ms ease-in-out infinite alternate;
+}
+
+.wedding-loading-screen__message {
+  margin: 0.8rem 0 0;
+  color: var(--theme-text-secondary);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+}
+
+html[data-theme='dark'] .wedding-loading-screen {
+  background: radial-gradient(ellipse at center, #480D13 0%, #300609 72%);
+}
+
+@keyframes wedding-loading-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wedding-lamp-flicker {
+  from {
+    opacity: 0.75;
+    transform: scale(0.9) rotate(-3deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.08) rotate(3deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .wedding-loading-screen,
+  .wedding-loading-screen__content,
+  .wedding-loading-screen__lamp span {
+    animation: none;
+    transition: none;
+  }
 }
 

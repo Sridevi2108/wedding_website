@@ -73,7 +73,7 @@ export const VenueSection: React.FC = () => {
 
       {/* ── 3D Temple Ambient Glow ── */}
       <div
-        className="absolute inset-0 pointer-events-none z-0"
+        className="theme-ambient-glow absolute inset-0 pointer-events-none z-0"
         style={{
           background:
             'radial-gradient(ellipse 85% 55% at 50% 30%, rgba(255, 238, 190, 0.45) 0%, rgba(246, 237, 220, 0.20) 55%, transparent 85%)',

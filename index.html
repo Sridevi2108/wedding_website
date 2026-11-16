@@ -3,6 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      try {
+        if (localStorage.getItem('wedding_theme') === 'dark') {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      } catch (error) {
+        console.warn('Theme preference read notice:', error);
+      }
+    </script>
     <title>C. Vignesh &amp; S. Pavithra - Royal South Indian Wedding</title>
     <meta name="description" content="Auspicious wedding invitation for C. Vignesh &amp; S. Pavithra featuring Dravidian temple aesthetics, events in Ooty &amp; Madurai, and an interactive 3D Blessings Tree." />
     <meta property="og:title" content="C. Vignesh &amp; S. Pavithra - Royal South Indian Wedding" />

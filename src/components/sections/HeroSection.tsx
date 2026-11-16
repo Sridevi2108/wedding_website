@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useTransition } from 'react';
 import { WEDDING_CONFIG, EventDetails, Blessing } from '../../data/weddingConfig';
 // Wedding music handled via HTML5 Audio element (useRef)
 import {
@@ -45,6 +45,7 @@ interface HeroSectionProps {
   blessings: Blessing[];
   onPlantBlessingClick: () => void;
   onOpenMenu?: () => void;
+  isDarkTheme: boolean;
 }
 
 interface TimeRemaining {
@@ -84,11 +85,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   blessings,
   onPlantBlessingClick,
   onOpenMenu,
+  isDarkTheme,
 }) => {
   // Target: Monday, 14 December 2026 06:15 AM IST (Asia/Kolkata)
   const targetTime = new Date('2026-12-14T06:15:00+05:30').getTime();
   const runwayRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [, startTransition] = useTransition();
 
   const calculateTimeLeft = (): TimeRemaining => {
     const now = Date.now();
@@ -154,7 +157,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             if (totalScroll > 0) {
               const currentScroll = -rect.top;
               const p = Math.min(Math.max(currentScroll / totalScroll, 0), 1);
-              setScrollProgress(p);
+              startTransition(() => setScrollProgress(p));
             }
           }
           ticking = false;
@@ -628,7 +631,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           }}
         >
           {/* Authentic Dravidian Temple Architecture (Desktop) */}
-          <div className="hidden md:block absolute inset-0">
+          <div className="theme-light-architecture hidden md:block absolute inset-0">
             <img
               src="/assets/temple_hero_clean_v3.png"
               alt="Dravidian Temple Sandalwood Pillars"
@@ -637,7 +640,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Mobile: Symmetrical Dravidian Temple Architecture exactly matching target reference */}
-          <div className="block md:hidden absolute inset-0 overflow-hidden pointer-events-none select-none">
+          <div className="theme-light-architecture block md:hidden absolute inset-0 overflow-hidden pointer-events-none select-none">
             <img
               src="/assets/temple_hero_mobile_v3.png"
               alt="Dravidian Temple Towers"
@@ -645,9 +648,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             />
           </div>
 
+          <div
+            className="theme-dark-architecture theme-dark-architecture--desktop absolute inset-0"
+            aria-hidden="true"
+          />
+          <div
+            className="theme-dark-architecture theme-dark-architecture--mobile absolute inset-0"
+            aria-hidden="true"
+          />
+
           {/* Golden Sunbeam Aura (Desktop only, hidden on mobile to avoid oval patch) */}
           <div
-            className="hidden md:block absolute inset-0 pointer-events-none"
+            className="theme-ambient-glow hidden md:block absolute inset-0 pointer-events-none"
             style={{
               background:
                 'radial-gradient(ellipse 75% 55% at 50% 30%, rgba(255, 238, 190, 0.45) 0%, rgba(255, 238, 190, 0.15) 45%, transparent 75%)',
@@ -696,7 +708,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex flex-col items-center text-center">
               <div className="w-12 h-12 xs:w-13 xs:h-13 sm:w-14 sm:h-14 mx-auto mb-1">
                 <img
-                  src="/assets/ganesha-authentic.png"
+                  src={isDarkTheme ? '/assets/dark-theme/ganesha-gold.png' : '/assets/ganesha-authentic.png'}
                   alt="Lord Ganesha Motif"
                   className="w-full h-full object-contain"
                 />
@@ -793,6 +805,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <p className="font-serif-royal text-xs sm:text-sm font-bold tracking-[0.2em] text-[#45352A] uppercase pt-0.5">
                 MONDAY, 14 DECEMBER 2026
               </p>
+
+              <nav
+                aria-label="Quick section navigation"
+                className="mt-2 sm:mt-3 flex w-full max-w-[520px] flex-wrap items-center justify-center gap-1.5 sm:gap-2"
+              >
+                {[
+                  { label: 'Couple', progress: 0.20 },
+                  { label: 'Events Timeline', progress: 0.54 },
+                  { label: 'Venue', progress: 0.68 },
+                  { label: 'Invitation', progress: 0.81 },
+                  { label: 'Blessing', progress: 0.92 },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => scrollToAnchor(item.progress)}
+                    className={`rounded-full border px-3 py-1.5 font-serif-royal text-[10px] xs:text-[11px] sm:text-xs font-bold tracking-wide shadow-xs transition-all duration-200 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#C49A58] ${
+                      isDarkTheme
+                        ? 'border-[#C99B48] bg-[#480D13]/95 text-[#E8C477] hover:bg-[#6A2420]'
+                        : 'border-[#C49A58]/80 bg-[#FFFDF9]/95 text-[#7A281E] hover:bg-[#FAF5EC]'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
             </div>
 
 
@@ -934,7 +972,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         >
           {/* Desktop: Soft Parchment Wash covering center & right, keeping left temple HD clear */}
           <div
-            className="hidden md:block absolute inset-0"
+            className="theme-content-backdrop hidden md:block absolute inset-0"
             style={{
               background:
                 'linear-gradient(to right, rgba(251, 246, 238, 0) 0%, rgba(251, 246, 238, 0) 22%, rgba(251, 246, 238, 0.88) 30%, rgba(250, 245, 236, 0.98) 42%, rgba(250, 245, 236, 0.98) 100%)',
@@ -942,7 +980,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           />
           {/* Mobile: Gentle Vignette keeping BOTH temple towers visible flanking the phone screen */}
           <div
-            className="block md:hidden absolute inset-0"
+            className="theme-content-backdrop block md:hidden absolute inset-0"
             style={{
               background:
                 'radial-gradient(ellipse 95% 75% at 50% 50%, rgba(251, 246, 238, 0.85) 0%, rgba(251, 246, 238, 0.45) 55%, transparent 95%)',
@@ -1020,7 +1058,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
             {/* Ultra-Subtle Warm Golden Aura (Keeps background temple 100% clear & sharp!) */}
             <div
-              className="absolute inset-0"
+              className="theme-ambient-glow absolute inset-0"
               style={{
                 background: 'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(255, 238, 190, 0.15) 0%, transparent 80%)',
               }}
@@ -1179,20 +1217,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
 
             {/* Mobile Header */}
-            <div className="block md:hidden text-center mb-1 xs:mb-1.5 shrink-0 px-2">
+            <div className="block md:hidden text-center mb-3 shrink-0 px-2">
               <div className="flex justify-center mb-0.5">
                 <svg width="22" height="13" viewBox="0 0 26 15" fill="none">
                   <path d="M13 1 C11 5 7 7 2 8 C7 9 11 11 13 15 C15 11 19 9 24 8 C19 7 15 5 13 1 Z" fill="#C49A58" opacity="0.9" />
                   <circle cx="13" cy="8" r="1.5" fill="#98502F" />
                 </svg>
               </div>
-              <div className="inline-flex items-center space-x-1.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3 py-0.5 rounded-full shadow-2xs">
-                <span className="text-[9px] text-[#C49A58]">✦</span>
-                <span className="text-[9px] xs:text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-                  Events Timeline
-                </span>
-                <span className="text-[9px] text-[#C49A58]">✦</span>
-              </div>
+              <h2 className="font-serif-royal text-[18px] font-bold uppercase tracking-wide text-[#98502F]">
+                Events Timeline
+              </h2>
+              <p className="font-cormorant text-[13px] italic text-[#766B60]">
+                Be a part of our special moments
+              </p>
             </div>
 
             {/* ══════════════════════════════════════════════════════════ */}
@@ -1543,18 +1580,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   const ev = events[0];
                   const isMenuOpen = activeCalendarMenuId === ev.id;
                   return (
-                    <div key={ev.id} className="relative w-full shrink-0">
-                      {/* Top Framed Arch Artwork with Green Foliage Flanks */}
-                      <div className="flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
+                    <div key={ev.id} className="mobile-event-card relative w-full shrink-0">
+                      <div className="mobile-event-card__visual flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
                         <img
-                          src="/assets/events/mobile_frame_ooty_2x.png"
+                          src="/assets/events/arch_ooty_hd.png"
                           alt="Engagement – Nilgiri Hills & Ooty Heritage Train"
-                          className="h-full w-auto max-w-[200px] xs:max-w-[220px] object-contain drop-shadow-sm select-none"
+                          className="h-full w-full object-cover drop-shadow-sm select-none"
                         />
                       </div>
 
                       {/* Card 1: Ivory with Notched Corners */}
-                      <div className="relative w-full rounded-2xl bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md overflow-hidden text-center transition-all duration-300 py-1.5 px-3 xs:px-3.5">
+                      <div className="mobile-event-card__content relative w-full rounded-2xl bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md overflow-hidden text-left transition-all duration-300 py-1.5 px-3 xs:px-3.5">
                         {/* Corner Notched Decorative Accents */}
                         <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t-1.5 border-l-1.5 border-[#D4A359]/70 rounded-tl" />
                         <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t-1.5 border-r-1.5 border-[#D4A359]/70 rounded-tr" />
@@ -1562,7 +1598,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-1.5 border-r-1.5 border-[#D4A359]/70 rounded-br" />
 
                         {/* Top Step Tag with Gold Accent Lines */}
-                        <div className="flex items-center justify-center space-x-2">
+                        <div className="mobile-event-card__eyebrow flex items-center justify-center space-x-2">
                           <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#C49A58]" />
                           <span className="font-serif-royal text-[9px] xs:text-[9.5px] font-bold tracking-[0.16em] text-[#98502F] uppercase">
                             01 · ENGAGEMENT
@@ -1571,12 +1607,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Event Title */}
-                        <h3 className="font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
+                        <h3 className="mobile-event-card__title font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
                           ENGAGEMENT – OOTY
                         </h3>
 
                         {/* Date & Time Row */}
-                        <div className="mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
+                        <div className="mobile-event-card__date mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
                           <span className="text-blue-600 text-xs">📅</span>
                           <span className="font-medium">13 December 2026</span>
                           <span className="text-[#98502F] font-bold">•</span>
@@ -1584,7 +1620,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Venue Row */}
-                        <div className="mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-center">
+                        <div className="mobile-event-card__location mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-left">
                           <p className="font-medium text-[#3E2723]">
                             <span className="text-pink-600 text-xs">📍</span> Sri Srinivasa Perumal Kalyana Mandapam
                           </p>
@@ -1592,7 +1628,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Terracotta Action Button */}
-                        <div className="mt-1.5">
+                        <div className="mobile-event-card__action mt-1.5">
                           <button
                             onClick={() => setActiveCalendarMenuId(isMenuOpen ? null : ev.id)}
                             className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#8C3A1A] hover:bg-[#782F13] text-[#FFF1B8] border border-[#D4A359]/70 rounded-full text-[10px] xs:text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-xs cursor-pointer transition-all active:scale-98"
@@ -1628,7 +1664,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 })()}
 
                 {/* ── Sacred Lotus Divider between Card 1 & 2 ── */}
-                <div className="my-1 xs:my-1.5 flex justify-center items-center w-full pointer-events-none select-none">
+                <div className="mobile-event-divider my-1 xs:my-1.5 flex justify-center items-center w-full pointer-events-none select-none">
                   <img
                     src="/assets/events/mobile_divider_lotus_2x.png"
                     alt=""
@@ -1641,18 +1677,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   const ev = events[1];
                   const isMenuOpen = activeCalendarMenuId === ev.id;
                   return (
-                    <div key={ev.id} className="relative w-full shrink-0">
-                      {/* Top Framed Arch Artwork with Green Foliage Flanks */}
-                      <div className="flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
+                    <div key={ev.id} className="mobile-event-card relative w-full shrink-0">
+                      <div className="mobile-event-card__visual flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
                         <img
-                          src="/assets/events/mobile_frame_mandapam_2x.png"
+                          src="/assets/events/arch_mandapam_hd.png"
                           alt="Auspicious Muhurtham Mandapam"
-                          className="h-full w-auto max-w-[200px] xs:max-w-[220px] object-contain drop-shadow-sm select-none"
+                          className="h-full w-full object-cover drop-shadow-sm select-none"
                         />
                       </div>
 
                       {/* Card 2: Highlighted with rich warm terracotta/gold & Muhurtham Badge */}
-                      <div className="relative w-full rounded-2xl bg-gradient-to-b from-[#FFFDF9] via-[#FAF3E8] to-[#FFFDF9] border-1.5 border-[#98502F] shadow-sm backdrop-blur-md overflow-hidden text-center transition-all duration-300 py-1.5 px-3 xs:px-3.5">
+                      <div className="mobile-event-card__content relative w-full rounded-2xl bg-gradient-to-b from-[#FFFDF9] via-[#FAF3E8] to-[#FFFDF9] border-1.5 border-[#98502F] shadow-sm backdrop-blur-md overflow-hidden text-left transition-all duration-300 py-1.5 px-3 xs:px-3.5">
                         {/* Corner Notched Decorative Accents */}
                         <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t-1.5 border-l-1.5 border-[#98502F]/80 rounded-tl" />
                         <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t-1.5 border-r-1.5 border-[#98502F]/80 rounded-tr" />
@@ -1660,7 +1695,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-1.5 border-r-1.5 border-[#98502F]/80 rounded-br" />
 
                         {/* Top Step Tag + MUHURTHAM Badge */}
-                        <div className="flex items-center justify-between relative px-0.5">
+                        <div className="mobile-event-card__eyebrow flex items-center justify-between relative px-0.5">
                           <div className="flex items-center space-x-1.5">
                             <div className="h-[1px] w-4 xs:w-5 bg-gradient-to-r from-transparent to-[#C49A58]" />
                             <span className="font-serif-royal text-[9px] xs:text-[9.5px] font-bold tracking-[0.16em] text-[#98502F] uppercase">
@@ -1674,12 +1709,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Event Title */}
-                        <h3 className="font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
+                        <h3 className="mobile-event-card__title font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
                           AUSPICIOUS MUHURTHAM
                         </h3>
 
                         {/* Date & Time Row */}
-                        <div className="mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
+                        <div className="mobile-event-card__date mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
                           <span className="text-blue-600 text-xs">📅</span>
                           <span className="font-medium">14 December 2026</span>
                           <span className="text-[#98502F] font-bold">•</span>
@@ -1687,7 +1722,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Venue Row */}
-                        <div className="mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-center">
+                        <div className="mobile-event-card__location mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-left">
                           <p className="font-medium text-[#3E2723]">
                             <span className="text-pink-600 text-xs">📍</span> Sri Srinivasa Perumal Kalyana Mandapam
                           </p>
@@ -1695,7 +1730,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Terracotta Action Button */}
-                        <div className="mt-1.5">
+                        <div className="mobile-event-card__action mt-1.5">
                           <button
                             onClick={() => setActiveCalendarMenuId(isMenuOpen ? null : ev.id)}
                             className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#8C3A1A] hover:bg-[#782F13] text-[#FFF1B8] border border-[#D4A359]/70 rounded-full text-[10px] xs:text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-xs cursor-pointer transition-all active:scale-98"
@@ -1731,7 +1766,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 })()}
 
                 {/* ── Sacred Lotus Divider between Card 2 & 3 ── */}
-                <div className="my-1 xs:my-1.5 flex justify-center items-center w-full pointer-events-none select-none">
+                <div className="mobile-event-divider my-1 xs:my-1.5 flex justify-center items-center w-full pointer-events-none select-none">
                   <img
                     src="/assets/events/mobile_divider_lotus_2x.png"
                     alt=""
@@ -1744,18 +1779,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   const ev = events[2];
                   const isMenuOpen = activeCalendarMenuId === ev.id;
                   return (
-                    <div key={ev.id} className="relative w-full shrink-0">
-                      {/* Top Framed Arch Artwork with Green Foliage Flanks */}
-                      <div className="flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
+                    <div key={ev.id} className="mobile-event-card relative w-full shrink-0">
+                      <div className="mobile-event-card__visual flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
                         <img
-                          src="/assets/events/mobile_frame_madurai_2x.png"
+                          src="/assets/events/arch_madurai_hd.png"
                           alt="Reception – Madurai Meenakshi Temple Gopuram"
-                          className="h-full w-auto max-w-[200px] xs:max-w-[220px] object-contain drop-shadow-sm select-none"
+                          className="h-full w-full object-cover drop-shadow-sm select-none"
                         />
                       </div>
 
                       {/* Card 3: Ivory with Notched Corners */}
-                      <div className="relative w-full rounded-2xl bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md overflow-hidden text-center transition-all duration-300 py-1.5 px-3 xs:px-3.5">
+                      <div className="mobile-event-card__content relative w-full rounded-2xl bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md overflow-hidden text-left transition-all duration-300 py-1.5 px-3 xs:px-3.5">
                         {/* Corner Notched Decorative Accents */}
                         <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t-1.5 border-l-1.5 border-[#D4A359]/70 rounded-tl" />
                         <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t-1.5 border-r-1.5 border-[#D4A359]/70 rounded-tr" />
@@ -1763,7 +1797,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-1.5 border-r-1.5 border-[#D4A359]/70 rounded-br" />
 
                         {/* Top Step Tag with Gold Accent Lines */}
-                        <div className="flex items-center justify-center space-x-2">
+                        <div className="mobile-event-card__eyebrow flex items-center justify-center space-x-2">
                           <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#C49A58]" />
                           <span className="font-serif-royal text-[9px] xs:text-[9.5px] font-bold tracking-[0.16em] text-[#98502F] uppercase">
                             03 · RECEPTION
@@ -1772,12 +1806,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Event Title */}
-                        <h3 className="font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
+                        <h3 className="mobile-event-card__title font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
                           RECEPTION – MADURAI
                         </h3>
 
                         {/* Date & Time Row */}
-                        <div className="mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
+                        <div className="mobile-event-card__date mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
                           <span className="text-blue-600 text-xs">📅</span>
                           <span className="font-medium">15 December 2026</span>
                           <span className="text-[#98502F] font-bold">•</span>
@@ -1785,7 +1819,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Venue Row */}
-                        <div className="mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-center">
+                        <div className="mobile-event-card__location mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-left">
                           <p className="font-medium text-[#3E2723]">
                             <span className="text-pink-600 text-xs">📍</span> Raja Muthiah Mandram
                           </p>
@@ -1793,7 +1827,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         </div>
 
                         {/* Terracotta Action Button */}
-                        <div className="mt-1.5">
+                        <div className="mobile-event-card__action mt-1.5">
                           <button
                             onClick={() => setActiveCalendarMenuId(isMenuOpen ? null : ev.id)}
                             className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#8C3A1A] hover:bg-[#782F13] text-[#FFF1B8] border border-[#D4A359]/70 rounded-full text-[10px] xs:text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-xs cursor-pointer transition-all active:scale-98"
@@ -1911,24 +1945,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           <div className="relative z-10 max-w-4xl lg:max-w-5xl w-full mx-auto px-2 py-0 text-center">
             {/* Header */}
-            <div className="mb-2 sm:mb-3">
+            <div className="mb-3 md:mb-3">
               <div className="flex justify-center mb-0.5 sm:mb-1">
                 <svg width="26" height="15" viewBox="0 0 26 15" fill="none" className="text-[#C49A58]">
                   <path d="M13 1 C11 5 7 7 2 8 C7 9 11 11 13 15 C15 11 19 9 24 8 C19 7 15 5 13 1 Z" fill="#C49A58" opacity="0.9" />
                   <circle cx="13" cy="8" r="1.5" fill="#98502F" />
                 </svg>
               </div>
-              <div className="inline-flex items-center space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-4 py-0.5 rounded-full shadow-2xs">
+              <div className="hidden md:inline-flex items-center space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-4 py-0.5 rounded-full shadow-2xs">
                 <span className="text-xs text-[#C49A58]">✦</span>
                 <span className="text-[10px] font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
                   Wedding Venues
                 </span>
                 <span className="text-xs text-[#C49A58]">✦</span>
               </div>
+              <h2 className="md:hidden font-serif-royal text-[18px] font-bold uppercase tracking-wide text-[#98502F]">
+                Wedding Venues
+              </h2>
+              <p className="md:hidden font-cormorant text-[13px] italic text-[#766B60]">
+                Celebrate in the most divine locations
+              </p>
             </div>
 
             {/* Stack venue cards on mobile and show them side-by-side on desktop. */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4 lg:gap-6 w-full text-left pb-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 lg:gap-6 w-full max-w-[320px] md:max-w-none mx-auto text-left pb-1">
               {WEDDING_CONFIG.venues.map((venue) => {
                 const isOoty = venue.id === 'ooty-venue';
                 const isCopied = copiedId === venue.id;
@@ -1936,36 +1976,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 return (
                   <div
                     key={venue.id}
-                    className="bg-[#FFFDF9]/92 border border-[#C49A58]/70 rounded-2xl sm:rounded-[2rem] p-2.5 sm:p-5 shadow-xl backdrop-blur-md flex flex-col justify-between text-left hover:scale-[1.01] transition-all"
+                    className="bg-[#FFFDF9]/92 border border-[#C49A58]/70 rounded-2xl md:rounded-[2rem] p-3 md:p-5 shadow-xl backdrop-blur-md flex flex-col justify-between text-left hover:scale-[1.01] transition-all"
                   >
                     <div>
-                      <div className="mb-1.5 sm:mb-3 flex h-20 sm:h-36 items-center justify-center overflow-hidden rounded-xl border border-[#E5D8C4] bg-[#FAF5EC] p-1.5">
+                      <div className="mb-2 md:mb-3 flex h-[96px] md:h-36 items-center justify-center overflow-hidden rounded-xl border border-[#E5D8C4] bg-[#FAF5EC] p-0 md:p-1.5">
                         <img
                           src={isOoty ? '/assets/venues/ooty-mandapam.png' : '/assets/venues/gt-palace.png'}
                           alt={`${venue.name} venue`}
-                          className="h-full w-full object-contain object-center"
+                          className="h-full w-full object-cover object-center md:object-contain"
                         />
                       </div>
 
                       {/* Card Header Row */}
-                      <div className="flex items-center justify-between mb-1 sm:mb-2.5">
-                        <span className="text-[9px] sm:text-[10px] font-serif-royal font-bold uppercase tracking-wider text-[#98502F] bg-[#FAF5EC] px-3 sm:px-3.5 py-0.5 rounded-full border border-[#C49A58]">
+                      <div className="flex items-center justify-center md:justify-between mb-2 md:mb-2.5">
+                        <span className="text-[9px] md:text-[10px] font-serif-royal font-bold uppercase tracking-wider text-[#98502F] bg-[#FAF5EC] px-3 md:px-3.5 py-0.5 rounded-full border border-[#C49A58]">
                           {isOoty ? '🛕 Ooty Muhurtham' : '🏛️ Madurai Reception'}
                         </span>
-                        <span className="text-base sm:text-lg">👑</span>
+                        <span className="hidden md:inline text-base md:text-lg">👑</span>
                       </div>
 
-                      <h3 className="font-serif-royal text-sm sm:text-xl font-bold text-[#45352A] leading-snug mb-1">
+                      <h3 className="font-serif-royal text-[15px] md:text-xl font-bold text-[#45352A] leading-snug text-center md:text-left mb-1.5 md:mb-1">
                         {venue.name}
                       </h3>
 
-                      <div className="flex items-center space-x-1.5 text-[10px] sm:text-xs text-[#766B60] font-medium mb-1.5 sm:mb-3">
+                      <div className="flex items-center justify-center md:justify-start space-x-1.5 text-[10px] md:text-xs text-[#766B60] font-medium text-center md:text-left mb-2 md:mb-3">
                         <MapPin className="w-3.5 h-3.5 text-[#C49A58] shrink-0" />
                         <span>{venue.landmark}</span>
                       </div>
 
                       {/* Address Box with Copy Button */}
-                      <div className="bg-[#FAF5EC]/90 border border-[#E5D8C4] rounded-xl p-2 sm:p-3 mb-1.5 sm:mb-3 text-[10px] sm:text-xs flex items-start justify-between gap-2">
+                      <div className="bg-[#FAF5EC]/90 border border-[#E5D8C4] rounded-xl p-2.5 md:p-3 mb-2 md:mb-3 text-[10px] md:text-xs flex items-start justify-between gap-2">
                         <div className="flex items-start space-x-2">
                           <MapPin className="w-3.5 h-3.5 text-[#98502F] shrink-0 mt-0.5" />
                           <p className="text-[#45352A] font-medium leading-relaxed">{venue.address}</p>
@@ -1985,7 +2025,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     {/* Full Width Google Maps Button */}
                     <button
                       onClick={() => handleGetDirections(venue.directionsUrl)}
-                      className="w-full inline-flex items-center justify-center space-x-2 py-1.5 sm:py-2.5 px-4 bg-gradient-to-r from-[#D48B28] to-[#98502F] hover:brightness-105 text-white rounded-full text-[10px] sm:text-xs font-serif-royal font-bold uppercase tracking-wider shadow-md cursor-pointer transition-all"
+                      className="w-full inline-flex items-center justify-center space-x-2 py-2 md:py-2.5 px-4 bg-gradient-to-r from-[#D48B28] to-[#98502F] hover:brightness-105 text-white rounded-full text-[10px] md:text-xs font-serif-royal font-bold uppercase tracking-wider shadow-md cursor-pointer transition-all"
                     >
                       <Navigation className="w-3.5 h-3.5 text-[#FFF1B8]" />
                       <span>Open in Google Maps</span>
@@ -2215,7 +2255,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="bg-[#FFFDF9]/92 border-2 border-[#C49A58] rounded-2xl sm:rounded-[2rem] p-3.5 sm:p-5 shadow-xl backdrop-blur-md max-w-2xl w-full mb-2.5 sm:mb-3.5 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 text-center sm:text-left">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 sm:w-11 sm:h-11 shrink-0 p-1 rounded-2xl bg-[#FAF5EC] border border-[#C49A58]/80 flex items-center justify-center">
-                  <img src="/assets/ganesha-authentic.png" alt="Ganesha" className="w-full h-full object-contain" />
+                  <img
+                    src={isDarkTheme ? '/assets/dark-theme/ganesha-gold.png' : '/assets/ganesha-authentic.png'}
+                    alt="Ganesha"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 <div>
                   <h4 className="font-serif-royal font-bold text-xs sm:text-base text-[#45352A]">
@@ -2291,20 +2335,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             pointerEvents: footerOpacity > 0.5 ? 'auto' : 'none',
           }}
         >
-          <div className="absolute inset-0 pointer-events-none" style={{
+          <div className="theme-content-backdrop absolute inset-0 pointer-events-none" style={{
             background: 'radial-gradient(ellipse 52% 72% at 50% 48%, rgba(255, 247, 226, 0.9) 0%, rgba(255, 247, 226, 0.72) 58%, rgba(255, 247, 226, 0) 100%)',
           }} />
           <div className="relative z-10 w-full max-w-3xl h-full mx-auto flex flex-col items-center justify-between text-center py-1 sm:py-2">
             <div className="w-full flex flex-col items-center gap-1 sm:gap-2">
               <div className="md:hidden w-12 h-12">
                 <img
-                  src="/assets/ganesha-authentic.png"
+                  src={isDarkTheme ? '/assets/dark-theme/ganesha-gold.png' : '/assets/ganesha-authentic.png'}
                   alt="Pillayar"
                   className="w-full h-full object-contain drop-shadow-sm"
                 />
               </div>
               <div className="hidden md:block w-10 h-10 sm:w-16 sm:h-16">
-                <img src="/assets/ganesha-authentic.png" alt="Ganesha" className="w-full h-full object-contain drop-shadow-sm" />
+                <img
+                  src={isDarkTheme ? '/assets/dark-theme/ganesha-gold.png' : '/assets/ganesha-authentic.png'}
+                  alt="Ganesha"
+                  className="w-full h-full object-contain drop-shadow-sm"
+                />
               </div>
 
               <p className="font-serif-royal text-[9px] sm:text-xs font-semibold tracking-[0.2em] text-[#B87320]">

@@ -1,17 +1,29 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Blessing } from './data/weddingConfig';
 import { Navbar } from './components/layout/Navbar';
+import { WeddingLoadingScreen } from './components/layout/WeddingLoadingScreen';
 import { HeroSection } from './components/sections/HeroSection';
 import { PlantBlessingModal } from './components/tree/PlantBlessingModal';
 import { AdminModal } from './components/admin/AdminModal';
 import { JasmineGarlandHeader } from './components/ui/TraditionalBorders';
 import { fetchLiveBlessings } from './utils/supabaseBlessings';
+import { weddingAudio } from './utils/weddingAudio';
 
 export default function App() {
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    try {
+      return localStorage.getItem('wedding_theme') === 'dark';
+    } catch (error) {
+      console.warn('Theme preference read notice:', error);
+      return document.documentElement.dataset.theme === 'dark';
+    }
+  });
   const [blessings, setBlessings] = useState<Blessing[]>([]);
+  const [isLoadingScreenVisible, setIsLoadingScreenVisible] = useState(true);
   const [isPlantModalOpen, setIsPlantModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const dismissLoadingScreen = useCallback(() => setIsLoadingScreenVisible(false), []);
   // Keep the public tree synchronized with newly approved blessings.
   const fetchBlessings = useCallback(async () => {
     let serverBlessings: Blessing[] = [];
@@ -54,6 +66,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    weddingAudio.setupAutoPlay();
     fetchBlessings();
     const refreshVisiblePage = () => {
       if (document.visibilityState === 'visible') fetchBlessings();
@@ -115,6 +128,23 @@ export default function App() {
 
   const [isMenuDrawerOpen, setIsMenuDrawerOpen] = useState(false);
 
+  useEffect(() => {
+    document.documentElement.dataset.theme = isDarkTheme ? 'dark' : 'light';
+    try {
+      localStorage.setItem('wedding_theme', isDarkTheme ? 'dark' : 'light');
+    } catch (error) {
+      console.warn('Theme preference save notice:', error);
+    }
+  }, [isDarkTheme]);
+
+  const toggleTheme = () => {
+    document.documentElement.classList.add('theme-transition');
+    window.setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition');
+    }, 400);
+    setIsDarkTheme((current) => !current);
+  };
+
   return (
     <div className="min-h-screen bg-[#F8F2E7] text-[#45352A] flex flex-col selection:bg-[#C49A58]/25 selection:text-[#45352A]">
       {/* Navigation Bar */}
@@ -123,6 +153,8 @@ export default function App() {
         onPlantBlessingClick={() => setIsPlantModalOpen(true)}
         onAdminClick={() => setIsAdminModalOpen(true)}
         onNavClick={scrollToSection}
+        isDarkTheme={isDarkTheme}
+        onThemeToggle={toggleTheme}
       />
 
       {/* Royal Slide-in Menu Drawer (Triggered by in-hero 'Menu' button) */}
@@ -191,8 +223,11 @@ export default function App() {
           blessings={blessings}
           onPlantBlessingClick={() => setIsPlantModalOpen(true)}
           onOpenMenu={() => setIsMenuDrawerOpen(true)}
+          isDarkTheme={isDarkTheme}
         />
       </main>
+
+      {isLoadingScreenVisible && <WeddingLoadingScreen onComplete={dismissLoadingScreen} />}
 
       {/* Plant Blessing Modal Dialog */}
       <PlantBlessingModal

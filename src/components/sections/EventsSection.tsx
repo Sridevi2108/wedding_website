@@ -60,7 +60,7 @@ export const EventsSection: React.FC = () => {
 
       {/* Subtle Warm Golden Aura */}
       <div
-        className="absolute inset-0 pointer-events-none z-0"
+        className="theme-ambient-glow absolute inset-0 pointer-events-none z-0"
         style={{
           background:
             'radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255, 238, 190, 0.35) 0%, rgba(246, 237, 220, 0.65) 65%, #F6EDDC 100%)',
