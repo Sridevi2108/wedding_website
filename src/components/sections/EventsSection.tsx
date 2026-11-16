@@ -136,8 +136,8 @@ export const EventsSection: React.FC = () => {
       </div>
 
       <div className="relative z-10 w-full max-w-xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto flex flex-col items-center justify-center my-auto">
-        {/* ── Section Header (Exact Match to Hero Mockup) ── */}
-        <div className="relative z-10 text-center mb-2.5 sm:mb-3.5 max-w-2xl mx-auto px-2 shrink-0">
+        {/* ── Desktop Editorial Header (Hidden on Mobile) ── */}
+        <div className="hidden md:block relative z-10 text-center mb-2.5 sm:mb-3.5 max-w-2xl mx-auto px-2 shrink-0">
           {/* 4-Point Golden Star */}
           <div className="flex justify-center mb-0.5 sm:mb-1">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-[#C49A58]">
@@ -167,6 +167,13 @@ export const EventsSection: React.FC = () => {
             </p>
             <div className="h-[1px] w-8 sm:w-14 bg-gradient-to-l from-transparent via-[#C49A58] to-[#C49A58]" />
           </div>
+        </div>
+
+        {/* ── Mobile Header: Clean Centered Cormorant Italic Subtitle Matching Mockup Exactly ── */}
+        <div className="block md:hidden text-center mb-1 shrink-0 px-2">
+          <p className="font-cormorant italic text-[11px] xs:text-[12px] text-[#6E6053] tracking-wide">
+            A sacred journey from the Nilgiri hills to royal Madurai
+          </p>
         </div>
 
         {/* ══════════════════════════════════════════════════════════ */}
@@ -483,164 +490,91 @@ export const EventsSection: React.FC = () => {
         </div>
 
         {/* ══════════════════════════════════════════════════════════ */}
-        {/* ── MOBILE TIMELINE: Exact Format of Reference Image ── */}
-        {/* (Left Golden Track + 3 Lotus Nodes + 3 Stacked Cards) */}
+        {/* ── MOBILE TIMELINE: Centered Vertical Cards Matching Target Mockup ── */}
+        {/* (NO side line, Framed Arch Pictures + Ivory Notched Cards + Lotus Dividers) */}
         {/* ══════════════════════════════════════════════════════════ */}
-        <div className="block md:hidden relative w-full max-w-[340px] xs:max-w-[360px] mx-auto pt-1 pb-1">
-          {/* Background Left Vertical Golden Line */}
-          <div className="absolute left-3.5 sm:left-4 top-4 bottom-6 w-[2px] -translate-x-1/2 bg-[#E5D8C4]/80 z-0" />
-
-          {/* Animated Drawing Golden Line */}
-          <div className="absolute left-3.5 sm:left-4 top-4 bottom-6 w-[2.5px] -translate-x-1/2 bg-gradient-to-b from-[#D4A359] via-[#B87333] to-[#98502F] shadow-[0_0_10px_rgba(212,163,89,0.7)] z-0" />
-
-          {/* 3 Chronological Stacked Event Cards Matching Image 1 Format */}
-          <div className="space-y-3 sm:space-y-3.5">
+        <div className="block md:hidden relative w-full max-w-[325px] xs:max-w-[345px] sm:max-w-[360px] mx-auto pt-0.5 pb-0.5">
+          <div className="relative z-20 flex flex-col items-center">
             {/* ── MOBILE EVENT 1: Engagement — Ooty ── */}
             {(() => {
               const ev = events[0];
               const isMenuOpen = activeCalendarMenuId === ev.id;
               return (
-                <div key={ev.id} className="relative pl-7 sm:pl-8">
-                  {/* Node 1: Circular Lotus Disc */}
-                  <div className="absolute left-3.5 sm:left-4 top-4 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-[#FFFDF9] border-2 border-[#D4A359] ring-3 ring-[#D4A359]/40 border-[#98502F] scale-105 shadow-[0_0_12px_rgba(212,163,89,0.7)] flex items-center justify-center">
-                    <span className="text-[10px]">🪷</span>
-                    <div className="absolute left-full top-1/2 -translate-y-1/2 w-2 h-[1.5px] bg-[#D4A359] pointer-events-none" />
+                <div key={ev.id} className="relative w-full shrink-0">
+                  {/* Top Framed Arch Artwork with Green Foliage Flanks */}
+                  <div className="flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
+                    <img
+                      src="/assets/events/mobile_frame_ooty_2x.png"
+                      alt="Engagement – Nilgiri Hills & Ooty Heritage Train"
+                      className="h-full w-auto max-w-[200px] xs:max-w-[220px] object-contain drop-shadow-sm select-none"
+                    />
                   </div>
 
-                  {/* Card 1: Clean Editorial Style (Compact) */}
-                  <div className="relative w-full rounded-2xl py-2 px-3 sm:py-2.5 sm:px-3.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md text-left transition-all duration-300">
-                    <p className="font-serif-royal text-[9.5px] font-bold tracking-widest text-[#98502F] uppercase">
-                      01 · ENGAGEMENT
-                    </p>
-                    <h3 className="font-serif-royal text-sm sm:text-base font-bold text-[#3E2723] mt-0.5 leading-snug">
-                      Engagement – Ooty
-                    </h3>
-                    <p className="text-[11px] text-[#6E6053] font-medium leading-tight mt-0.5">
-                      நிச்சயதார்த்தம்
-                    </p>
+                  {/* Card 1: Ivory with Notched Corners */}
+                  <div className="relative w-full rounded-2xl bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md overflow-hidden text-center transition-all duration-300 py-1.5 px-3 xs:px-3.5">
+                    {/* Corner Notched Decorative Accents */}
+                    <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t-1.5 border-l-1.5 border-[#D4A359]/70 rounded-tl" />
+                    <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t-1.5 border-r-1.5 border-[#D4A359]/70 rounded-tr" />
+                    <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b-1.5 border-l-1.5 border-[#D4A359]/70 rounded-bl" />
+                    <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-1.5 border-r-1.5 border-[#D4A359]/70 rounded-br" />
 
-                    <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2 text-[11px] text-[#45352A]">
-                      <span className="font-medium">📅 13 December 2026</span>
-                      <span className="text-[#98502F] font-bold">•</span>
-                      <span className="text-[#6E6053]">6:00 PM onwards</span>
-                    </div>
-
-                    <div className="mt-1 text-[10.5px] text-[#5C4D41] leading-snug">
-                      <p className="font-semibold text-[#3E2723]">📍 Sri Srinivasa Perumal Kalyana Mandapam</p>
-                      <p className="text-[#766B60] text-[10px] pl-3.5">Ooty · 643001</p>
-                    </div>
-
-                    <div className="mt-2 pt-1.5 border-t border-[#E8DEC9]">
-                      <button
-                        onClick={() => setActiveCalendarMenuId(isMenuOpen ? null : ev.id)}
-                        className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#FAF5EC] hover:bg-[#FFFDF9] border border-[#C49A58] text-[#45352A] rounded-full text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-2xs cursor-pointer transition-all active:scale-98"
-                      >
-                        <CalendarPlus className="w-3 h-3 text-[#98502F]" />
-                        <span>ADD TO CALENDAR</span>
-                        <ChevronDown className={`w-2.5 h-2.5 text-[#766B60] transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
-                      </button>
-                      {isMenuOpen && (
-                        <div className="mt-2 pt-2 border-t border-dashed border-[#C49A58]/60 grid grid-cols-2 gap-2 animate-fadeIn">
-                          <button
-                            onClick={() => handleOpenGoogleCal(ev)}
-                            className="flex items-center justify-center space-x-1 py-1.5 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#98502F] rounded-lg text-[#3E2723] font-serif-royal font-bold text-[10.5px] shadow-xs cursor-pointer"
-                          >
-                            <span className="text-xs">📅</span>
-                            <span>Google Cal</span>
-                            <span className="text-[8px] text-[#98502F] bg-[#FAF5EC] px-1 rounded font-semibold border border-[#E5D8C4]">Web</span>
-                          </button>
-                          <button
-                            onClick={() => handleDownloadIcs(ev)}
-                            className="flex items-center justify-center space-x-1 py-1.5 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#98502F] rounded-lg text-[#3E2723] font-serif-royal font-bold text-[10.5px] shadow-xs cursor-pointer"
-                          >
-                            <span className="text-xs">🍎</span>
-                            <span>Outlook</span>
-                            <span className="text-[8px] text-[#98502F] bg-[#FAF5EC] px-1 rounded font-semibold border border-[#E5D8C4]">.ics</span>
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* ── MOBILE EVENT 2: Wedding — Sacred Ceremony (Highlighted Muhurtham) ── */}
-            {(() => {
-              const ev = events[1];
-              const isMenuOpen = activeCalendarMenuId === ev.id;
-              return (
-                <div key={ev.id} className="relative pl-7 sm:pl-8">
-                  {/* Node 2: Circular Lotus Disc */}
-                  <div className="absolute left-3.5 sm:left-4 top-4 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-gradient-to-b from-[#FFFDF9] to-[#FAF3E8] border-2 border-[#98502F] ring-4 ring-amber-500/50 scale-105 shadow-[0_0_16px_rgba(234,88,12,0.6)] flex items-center justify-center">
-                    <span className="text-[10px]">🪷</span>
-                    <div className="absolute left-full top-1/2 -translate-y-1/2 w-2 h-[2px] bg-[#98502F] pointer-events-none" />
-                  </div>
-
-                  {/* Card 2: Highlighted with rich warm terracotta/gold & Muhurtham Badge */}
-                  <div className="relative w-full rounded-2xl py-2 px-3 sm:py-2.5 sm:px-3.5 bg-gradient-to-b from-[#FFFDF9] via-[#FAF3E8] to-[#FFFDF9] border-2 border-[#98502F] ring-1 ring-[#D4A359]/70 shadow-md shadow-[#98502F]/15 backdrop-blur-md text-left transition-all duration-300">
-                    {/* Subtle Temple Tower Watermark on Right */}
-                    <div className="absolute right-0 top-0 bottom-0 w-28 pointer-events-none select-none opacity-15 mix-blend-multiply overflow-hidden rounded-r-2xl">
-                      <img
-                        src="/assets/temple_tower_right_hd.png"
-                        alt=""
-                        className="w-full h-full object-contain object-right"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between relative z-10">
-                      <p className="font-serif-royal text-[9.5px] font-bold tracking-widest text-[#98502F] uppercase">
-                        02 · THE WEDDING
-                      </p>
-                      <span className="text-[8.5px] font-serif-royal font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#8C3A1A] text-white shadow-2xs">
-                        MUHURTHAM
+                    {/* Top Step Tag with Gold Accent Lines */}
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#C49A58]" />
+                      <span className="font-serif-royal text-[9px] xs:text-[9.5px] font-bold tracking-[0.16em] text-[#98502F] uppercase">
+                        01 · ENGAGEMENT
                       </span>
+                      <div className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#C49A58]" />
                     </div>
 
-                    <h3 className="font-serif-royal text-sm sm:text-base font-bold text-[#3E2723] mt-0.5 leading-snug relative z-10">
-                      Auspicious Muhurtham
+                    {/* Event Title */}
+                    <h3 className="font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
+                      ENGAGEMENT – OOTY
                     </h3>
-                    <p className="text-[11px] text-[#6E6053] font-medium leading-tight mt-0.5 relative z-10">
-                      மங்கல முகூர்த்தம்
-                    </p>
 
-                    <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2 text-[11px] relative z-10">
-                      <span className="font-medium text-[#45352A]">📅 14 December 2026</span>
+                    {/* Date & Time Row */}
+                    <div className="mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
+                      <span className="text-blue-600 text-xs">📅</span>
+                      <span className="font-medium">13 December 2026</span>
                       <span className="text-[#98502F] font-bold">•</span>
-                      <span className="text-[#8C3A1A] font-bold">6:15 AM – 7:15 AM</span>
+                      <span className="text-[#6E6053] font-medium">🕒 6:00 PM onwards</span>
                     </div>
 
-                    <div className="mt-1 text-[10.5px] text-[#5C4D41] leading-snug relative z-10">
-                      <p className="font-semibold text-[#3E2723]">📍 Sri Srinivasa Perumal Kalyana Mandapam</p>
-                      <p className="text-[#766B60] text-[10px] pl-3.5">Ooty · 643001</p>
+                    {/* Venue Row */}
+                    <div className="mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-center">
+                      <p className="font-medium text-[#3E2723]">
+                        <span className="text-pink-600 text-xs">📍</span> Sri Srinivasa Perumal Kalyana Mandapam
+                      </p>
+                      <p className="text-[#766B60] text-[9px] xs:text-[9.5px]">Ooty · 643001</p>
                     </div>
 
-                    <div className="mt-2 pt-1.5 border-t border-[#E8DEC9] relative z-10">
+                    {/* Terracotta Action Button */}
+                    <div className="mt-1.5">
                       <button
                         onClick={() => setActiveCalendarMenuId(isMenuOpen ? null : ev.id)}
-                        className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-gradient-to-r from-[#8C3A1A] to-[#6E2C12] hover:brightness-105 text-[#FFF1B8] border border-[#D4A359] rounded-full text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-md cursor-pointer transition-all active:scale-98"
+                        className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#8C3A1A] hover:bg-[#782F13] text-[#FFF1B8] border border-[#D4A359]/70 rounded-full text-[10px] xs:text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-xs cursor-pointer transition-all active:scale-98"
                       >
                         <CalendarPlus className="w-3 h-3 text-[#FFF1B8]" />
                         <span>ADD TO CALENDAR</span>
                         <ChevronDown className={`w-2.5 h-2.5 text-[#FFF1B8] transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
                       </button>
                       {isMenuOpen && (
-                        <div className="mt-2 pt-2 border-t border-dashed border-[#8C3A1A]/40 grid grid-cols-2 gap-2 animate-fadeIn relative z-20">
+                        <div className="mt-1.5 pt-1.5 border-t border-dashed border-[#8C3A1A]/40 grid grid-cols-2 gap-2 animate-fadeIn">
                           <button
                             onClick={() => handleOpenGoogleCal(ev)}
-                            className="flex items-center justify-center space-x-1 py-1.5 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10.5px] shadow-xs cursor-pointer"
+                            className="flex items-center justify-center space-x-1 py-1 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10px] shadow-xs cursor-pointer"
                           >
-                            <span className="text-xs">📅</span>
+                            <span>📅</span>
                             <span>Google Cal</span>
-                            <span className="text-[8px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">Web</span>
+                            <span className="text-[7.5px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">Web</span>
                           </button>
                           <button
                             onClick={() => handleDownloadIcs(ev)}
-                            className="flex items-center justify-center space-x-1 py-1.5 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10.5px] shadow-xs cursor-pointer"
+                            className="flex items-center justify-center space-x-1 py-1 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10px] shadow-xs cursor-pointer"
                           >
-                            <span className="text-xs">🍎</span>
+                            <span>🍎</span>
                             <span>Outlook</span>
-                            <span className="text-[8px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">.ics</span>
+                            <span className="text-[7.5px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">.ics</span>
                           </button>
                         </div>
                       )}
@@ -650,67 +584,198 @@ export const EventsSection: React.FC = () => {
               );
             })()}
 
+            {/* ── Sacred Lotus Divider between Card 1 & 2 ── */}
+            <div className="my-1 xs:my-1.5 flex justify-center items-center w-full pointer-events-none select-none">
+              <img
+                src="/assets/events/mobile_divider_lotus_2x.png"
+                alt=""
+                className="h-2.5 xs:h-3 w-auto max-w-[210px] xs:max-w-[230px] object-contain opacity-90"
+              />
+            </div>
+
+            {/* ── MOBILE EVENT 2: Wedding — Auspicious Muhurtham ── */}
+            {(() => {
+              const ev = events[1];
+              const isMenuOpen = activeCalendarMenuId === ev.id;
+              return (
+                <div key={ev.id} className="relative w-full shrink-0">
+                  {/* Top Framed Arch Artwork with Green Foliage Flanks */}
+                  <div className="flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
+                    <img
+                      src="/assets/events/mobile_frame_mandapam_2x.png"
+                      alt="Auspicious Muhurtham Mandapam"
+                      className="h-full w-auto max-w-[200px] xs:max-w-[220px] object-contain drop-shadow-sm select-none"
+                    />
+                  </div>
+
+                  {/* Card 2: Highlighted with rich warm terracotta/gold & Muhurtham Badge */}
+                  <div className="relative w-full rounded-2xl bg-gradient-to-b from-[#FFFDF9] via-[#FAF3E8] to-[#FFFDF9] border-1.5 border-[#98502F] shadow-sm backdrop-blur-md overflow-hidden text-center transition-all duration-300 py-1.5 px-3 xs:px-3.5">
+                    {/* Corner Notched Decorative Accents */}
+                    <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t-1.5 border-l-1.5 border-[#98502F]/80 rounded-tl" />
+                    <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t-1.5 border-r-1.5 border-[#98502F]/80 rounded-tr" />
+                    <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b-1.5 border-l-1.5 border-[#98502F]/80 rounded-bl" />
+                    <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-1.5 border-r-1.5 border-[#98502F]/80 rounded-br" />
+
+                    {/* Top Step Tag + MUHURTHAM Badge */}
+                    <div className="flex items-center justify-between relative px-0.5">
+                      <div className="flex items-center space-x-1.5">
+                        <div className="h-[1px] w-4 xs:w-5 bg-gradient-to-r from-transparent to-[#C49A58]" />
+                        <span className="font-serif-royal text-[9px] xs:text-[9.5px] font-bold tracking-[0.16em] text-[#98502F] uppercase">
+                          02 · THE WEDDING
+                        </span>
+                        <div className="h-[1px] w-4 xs:w-5 bg-gradient-to-l from-transparent to-[#C49A58]" />
+                      </div>
+                      <span className="text-[8px] xs:text-[8.5px] font-serif-royal font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#8C3A1A] text-white shadow-2xs">
+                        MUHURTHAM
+                      </span>
+                    </div>
+
+                    {/* Event Title */}
+                    <h3 className="font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
+                      AUSPICIOUS MUHURTHAM
+                    </h3>
+
+                    {/* Date & Time Row */}
+                    <div className="mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
+                      <span className="text-blue-600 text-xs">📅</span>
+                      <span className="font-medium">14 December 2026</span>
+                      <span className="text-[#98502F] font-bold">•</span>
+                      <span className="text-[#8C3A1A] font-bold">🕒 6:15 AM – 7:15 AM</span>
+                    </div>
+
+                    {/* Venue Row */}
+                    <div className="mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-center">
+                      <p className="font-medium text-[#3E2723]">
+                        <span className="text-pink-600 text-xs">📍</span> Sri Srinivasa Perumal Kalyana Mandapam
+                      </p>
+                      <p className="text-[#766B60] text-[9px] xs:text-[9.5px]">Ooty · 643001</p>
+                    </div>
+
+                    {/* Terracotta Action Button */}
+                    <div className="mt-1.5">
+                      <button
+                        onClick={() => setActiveCalendarMenuId(isMenuOpen ? null : ev.id)}
+                        className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#8C3A1A] hover:bg-[#782F13] text-[#FFF1B8] border border-[#D4A359]/70 rounded-full text-[10px] xs:text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-xs cursor-pointer transition-all active:scale-98"
+                      >
+                        <CalendarPlus className="w-3 h-3 text-[#FFF1B8]" />
+                        <span>ADD TO CALENDAR</span>
+                        <ChevronDown className={`w-2.5 h-2.5 text-[#FFF1B8] transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
+                      </button>
+                      {isMenuOpen && (
+                        <div className="mt-1.5 pt-1.5 border-t border-dashed border-[#8C3A1A]/40 grid grid-cols-2 gap-2 animate-fadeIn relative z-20">
+                          <button
+                            onClick={() => handleOpenGoogleCal(ev)}
+                            className="flex items-center justify-center space-x-1 py-1 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10px] shadow-xs cursor-pointer"
+                          >
+                            <span>📅</span>
+                            <span>Google Cal</span>
+                            <span className="text-[7.5px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">Web</span>
+                          </button>
+                          <button
+                            onClick={() => handleDownloadIcs(ev)}
+                            className="flex items-center justify-center space-x-1 py-1 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10px] shadow-xs cursor-pointer"
+                          >
+                            <span>🍎</span>
+                            <span>Outlook</span>
+                            <span className="text-[7.5px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">.ics</span>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* ── Sacred Lotus Divider between Card 2 & 3 ── */}
+            <div className="my-1 xs:my-1.5 flex justify-center items-center w-full pointer-events-none select-none">
+              <img
+                src="/assets/events/mobile_divider_lotus_2x.png"
+                alt=""
+                className="h-2.5 xs:h-3 w-auto max-w-[210px] xs:max-w-[230px] object-contain opacity-90"
+              />
+            </div>
+
             {/* ── MOBILE EVENT 3: Reception — Madurai ── */}
             {(() => {
               const ev = events[2];
               const isMenuOpen = activeCalendarMenuId === ev.id;
               return (
-                <div key={ev.id} className="relative pl-7 sm:pl-8">
-                  {/* Node 3: Circular Lotus Disc */}
-                  <div className="absolute left-3.5 sm:left-4 top-4 -translate-x-1/2 z-10 w-6 h-6 rounded-full bg-[#FFFDF9] border-2 border-[#D4A359] ring-3 ring-[#D4A359]/40 border-[#98502F] scale-105 shadow-[0_0_12px_rgba(212,163,89,0.7)] flex items-center justify-center">
-                    <span className="text-[10px]">🪷</span>
-                    <div className="absolute left-full top-1/2 -translate-y-1/2 w-2 h-[1.5px] bg-[#C49A58] pointer-events-none" />
+                <div key={ev.id} className="relative w-full shrink-0">
+                  {/* Top Framed Arch Artwork with Green Foliage Flanks */}
+                  <div className="flex h-10 xs:h-11 sm:h-12 w-full items-center justify-center mb-0.5 pointer-events-none">
+                    <img
+                      src="/assets/events/mobile_frame_madurai_2x.png"
+                      alt="Reception – Madurai Meenakshi Temple Gopuram"
+                      className="h-full w-auto max-w-[200px] xs:max-w-[220px] object-contain drop-shadow-sm select-none"
+                    />
                   </div>
 
-                  {/* Card 3: Clean Editorial Style (Compact) */}
-                  <div className="relative w-full rounded-2xl py-2 px-3 sm:py-2.5 sm:px-3.5 bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md text-left transition-all duration-300">
-                    <p className="font-serif-royal text-[9.5px] font-bold tracking-widest text-[#98502F] uppercase">
-                      03 · RECEPTION
-                    </p>
-                    <h3 className="font-serif-royal text-sm sm:text-base font-bold text-[#3E2723] mt-0.5 leading-snug">
-                      Reception – Madurai
+                  {/* Card 3: Ivory with Notched Corners */}
+                  <div className="relative w-full rounded-2xl bg-[#FFFDF9]/95 border border-[#C49A58]/70 shadow-xs backdrop-blur-md overflow-hidden text-center transition-all duration-300 py-1.5 px-3 xs:px-3.5">
+                    {/* Corner Notched Decorative Accents */}
+                    <div className="absolute top-1.5 left-1.5 w-2 h-2 border-t-1.5 border-l-1.5 border-[#D4A359]/70 rounded-tl" />
+                    <div className="absolute top-1.5 right-1.5 w-2 h-2 border-t-1.5 border-r-1.5 border-[#D4A359]/70 rounded-tr" />
+                    <div className="absolute bottom-1.5 left-1.5 w-2 h-2 border-b-1.5 border-l-1.5 border-[#D4A359]/70 rounded-bl" />
+                    <div className="absolute bottom-1.5 right-1.5 w-2 h-2 border-b-1.5 border-r-1.5 border-[#D4A359]/70 rounded-br" />
+
+                    {/* Top Step Tag with Gold Accent Lines */}
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#C49A58]" />
+                      <span className="font-serif-royal text-[9px] xs:text-[9.5px] font-bold tracking-[0.16em] text-[#98502F] uppercase">
+                        03 · RECEPTION
+                      </span>
+                      <div className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#C49A58]" />
+                    </div>
+
+                    {/* Event Title */}
+                    <h3 className="font-serif-royal text-[13px] xs:text-[14px] font-bold text-[#3E2723] mt-0.5 leading-tight uppercase tracking-wide">
+                      RECEPTION – MADURAI
                     </h3>
-                    <p className="text-[11px] text-[#6E6053] font-medium leading-tight mt-0.5">
-                      திருமண வரவேற்பு
-                    </p>
 
-                    <div className="mt-1.5 flex flex-wrap items-baseline gap-x-2 text-[11px] text-[#45352A]">
-                      <span className="font-medium">📅 15 December 2026</span>
+                    {/* Date & Time Row */}
+                    <div className="mt-1 flex items-center justify-center space-x-1.5 text-[10px] xs:text-[10.5px] text-[#45352A]">
+                      <span className="text-blue-600 text-xs">📅</span>
+                      <span className="font-medium">15 December 2026</span>
                       <span className="text-[#98502F] font-bold">•</span>
-                      <span className="text-[#6E6053]">From 6:00 PM onwards</span>
+                      <span className="text-[#6E6053] font-medium">🕒 From 6:00 PM onwards</span>
                     </div>
 
-                    <div className="mt-1 text-[10.5px] text-[#5C4D41] leading-snug">
-                      <p className="font-semibold text-[#3E2723]">📍 Raja Muthiah Mandram</p>
-                      <p className="text-[#766B60] text-[10px] pl-3.5">Madurai · 625020</p>
+                    {/* Venue Row */}
+                    <div className="mt-0.5 text-[9.5px] xs:text-[10px] text-[#5C4D41] leading-tight text-center">
+                      <p className="font-medium text-[#3E2723]">
+                        <span className="text-pink-600 text-xs">📍</span> Raja Muthiah Mandram
+                      </p>
+                      <p className="text-[#766B60] text-[9px] xs:text-[9.5px]">Madurai · 625020</p>
                     </div>
 
-                    <div className="mt-2 pt-1.5 border-t border-[#E8DEC9]">
+                    {/* Terracotta Action Button */}
+                    <div className="mt-1.5">
                       <button
                         onClick={() => setActiveCalendarMenuId(isMenuOpen ? null : ev.id)}
-                        className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#FAF5EC] hover:bg-[#FFFDF9] border border-[#C49A58] text-[#45352A] rounded-full text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-2xs cursor-pointer transition-all active:scale-98"
+                        className="w-full inline-flex items-center justify-center space-x-1.5 py-1 px-3 bg-[#8C3A1A] hover:bg-[#782F13] text-[#FFF1B8] border border-[#D4A359]/70 rounded-full text-[10px] xs:text-[10.5px] font-serif-royal font-bold uppercase tracking-wider shadow-xs cursor-pointer transition-all active:scale-98"
                       >
-                        <CalendarPlus className="w-3 h-3 text-[#98502F]" />
+                        <CalendarPlus className="w-3 h-3 text-[#FFF1B8]" />
                         <span>ADD TO CALENDAR</span>
-                        <ChevronDown className={`w-2.5 h-2.5 text-[#766B60] transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
+                        <ChevronDown className={`w-2.5 h-2.5 text-[#FFF1B8] transition-transform duration-200 ${isMenuOpen ? 'rotate-180' : ''}`} />
                       </button>
                       {isMenuOpen && (
-                        <div className="mt-2 pt-2 border-t border-dashed border-[#C49A58]/60 grid grid-cols-2 gap-2 animate-fadeIn">
+                        <div className="mt-1.5 pt-1.5 border-t border-dashed border-[#8C3A1A]/40 grid grid-cols-2 gap-2 animate-fadeIn">
                           <button
                             onClick={() => handleOpenGoogleCal(ev)}
-                            className="flex items-center justify-center space-x-1 py-1.5 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#98502F] rounded-lg text-[#3E2723] font-serif-royal font-bold text-[10.5px] shadow-xs cursor-pointer"
+                            className="flex items-center justify-center space-x-1 py-1 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10px] shadow-xs cursor-pointer"
                           >
-                            <span className="text-xs">📅</span>
+                            <span>📅</span>
                             <span>Google Cal</span>
-                            <span className="text-[8px] text-[#98502F] bg-[#FAF5EC] px-1 rounded font-semibold border border-[#E5D8C4]">Web</span>
+                            <span className="text-[7.5px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">Web</span>
                           </button>
                           <button
                             onClick={() => handleDownloadIcs(ev)}
-                            className="flex items-center justify-center space-x-1 py-1.5 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#98502F] rounded-lg text-[#3E2723] font-serif-royal font-bold text-[10.5px] shadow-xs cursor-pointer"
+                            className="flex items-center justify-center space-x-1 py-1 px-2 bg-[#FFFDF9] hover:bg-[#FAF5EC] active:scale-95 border-1.5 border-[#8C3A1A] rounded-lg text-[#8C3A1A] font-serif-royal font-bold text-[10px] shadow-xs cursor-pointer"
                           >
-                            <span className="text-xs">🍎</span>
+                            <span>🍎</span>
                             <span>Outlook</span>
-                            <span className="text-[8px] text-[#98502F] bg-[#FAF5EC] px-1 rounded font-semibold border border-[#E5D8C4]">.ics</span>
+                            <span className="text-[7.5px] text-white bg-[#8C3A1A] px-1 rounded font-semibold">.ics</span>
                           </button>
                         </div>
                       )}
@@ -722,8 +787,8 @@ export const EventsSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Subtle Journey Flourish Divider (Exact Match to Reference Mockup) */}
-        <div className="flex items-center justify-center space-x-2 sm:space-x-3 mt-4 sm:mt-6 text-center">
+        {/* Bottom Subtle Journey Flourish Divider (Desktop Only) */}
+        <div className="hidden md:flex items-center justify-center space-x-2 sm:space-x-3 mt-4 sm:mt-6 text-center">
           <div className="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent via-[#C49A58] to-[#C49A58]" />
           <span className="text-xs sm:text-sm text-[#C49A58]">🪷</span>
           <p className="font-cormorant italic text-[11px] sm:text-xs md:text-sm text-[#766B60] tracking-wide">

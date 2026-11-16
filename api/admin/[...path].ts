@@ -1,5 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 
+const DEFAULT_ADMIN_PASSCODE = 'royal_wedding_2026';
+
 function getSupabaseConfig() {
   const url = process.env.SUPABASE_URL || '';
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
