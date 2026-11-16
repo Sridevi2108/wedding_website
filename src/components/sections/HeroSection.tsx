@@ -462,7 +462,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   const handleShareWhatsApp = () => {
-    const text = `🌸 *Wedding Invitation: C. Vignesh & S. Pavithra* 🌸\n\nTogether with the family, we cordially invite you to celebrate the auspicious wedding ceremony on *Monday, 14 December 2026* at Ooty, followed by the Grand Reception at Madurai.\n\nPlease plant your blessings on our interactive 3D Blessings Tree:\n${window.location.href}`;
+    const text = `🌸 *Wedding Invitation: C. Vignesh & S. Pavithra* 🌸\n\nTogether with the family, we cordially invite you to celebrate the auspicious wedding ceremony on *Monday, 14 December 2026* at Ooty, followed by the Grand Reception at Madurai.\n\n${window.location.href}`;
     const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };

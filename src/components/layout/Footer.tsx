@@ -16,7 +16,7 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   const handleShare = () => {
-    const text = `🌸 *Wedding of C. Vignesh & S. Pavithra* - 14 December 2026\nJoin us and plant your blessings:\n${window.location.href}`;
+    const text = `🌸 *Wedding of C. Vignesh & S. Pavithra* - 14 December 2026\n\n${window.location.href}`;
     if (navigator.share) {
       navigator.share({
         title: 'C. Vignesh & S. Pavithra Wedding',
