@@ -60,8 +60,6 @@ const INVITATION_PAGES = [
   },
 ];
 
-const SECTION_IDS = ['home', 'couple', 'events', 'venue', 'invitation', 'blessings', 'footer'];
-
 export const HeroSection: React.FC<HeroSectionProps> = ({
   blessings,
   onPlantBlessingClick,
@@ -127,184 +125,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     }, 1000);
     return () => clearInterval(timer);
   }, [targetTime]);
-
-  // ══════════════════════════════════════════════════════════════════════
-  // ── SMOOTH 1-SCROLL PER SECTION NAVIGATION ENGINE ──
-  // Ensures 1 scroll gesture moves directly to next section without hanging
-  // ══════════════════════════════════════════════════════════════════════
-  useEffect(() => {
-    let isLocked = false;
-    let lockTimer: number | null = null;
-    let wheelDeltaTimer: number | null = null;
-    let accumulatedWheelDelta = 0;
-    const scrollLockDuration = 900;
-
-    const extendScrollLock = () => {
-      if (lockTimer !== null) window.clearTimeout(lockTimer);
-      lockTimer = window.setTimeout(() => {
-        isLocked = false;
-        lockTimer = null;
-      }, scrollLockDuration);
-    };
-
-    const getCurrentSectionIndex = (): number => {
-      let currentIndex = 0;
-      let minDistance = Infinity;
-
-      SECTION_IDS.forEach((id, idx) => {
-        const el = document.getElementById(id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          const dist = Math.abs(rect.top);
-          if (dist < minDistance) {
-            minDistance = dist;
-            currentIndex = idx;
-          }
-        }
-      });
-
-      return currentIndex;
-    };
-
-    const canScrollWithinTarget = (eventTarget: EventTarget | null, deltaY: number): boolean => {
-      let target = eventTarget as HTMLElement | null;
-      while (target && target !== document.body) {
-        const overflowY = window.getComputedStyle(target).overflowY;
-        if ((overflowY === 'auto' || overflowY === 'scroll') && target.scrollHeight > target.clientHeight) {
-          if (deltaY > 0 && target.scrollTop + target.clientHeight < target.scrollHeight - 5) return true;
-          if (deltaY < 0 && target.scrollTop > 5) return true;
-        }
-        target = target.parentElement;
-      }
-      return false;
-    };
-
-    const scrollToSectionIndex = (idx: number) => {
-      const targetId = SECTION_IDS[idx];
-      const targetEl = document.getElementById(targetId);
-      if (targetEl) {
-        isLocked = true;
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        if (onActiveSectionChange) {
-          onActiveSectionChange(targetId === 'footer' ? 'blessings' : targetId);
-        }
-        extendScrollLock();
-      }
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if (isLightboxOpen || e.ctrlKey || e.deltaY === 0) return;
-
-      if (canScrollWithinTarget(e.target, e.deltaY)) return;
-
-      e.preventDefault();
-      if (isLocked) {
-        accumulatedWheelDelta = 0;
-        if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
-        wheelDeltaTimer = null;
-        extendScrollLock();
-        return;
-      }
-
-      accumulatedWheelDelta += e.deltaY;
-      if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
-      wheelDeltaTimer = window.setTimeout(() => {
-        accumulatedWheelDelta = 0;
-        wheelDeltaTimer = null;
-      }, 220);
-      if (Math.abs(accumulatedWheelDelta) < 18) return;
-
-      const currentIdx = getCurrentSectionIndex();
-      const nextIdx = accumulatedWheelDelta > 0
-        ? Math.min(currentIdx + 1, SECTION_IDS.length - 1)
-        : Math.max(currentIdx - 1, 0);
-
-      accumulatedWheelDelta = 0;
-      if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
-      wheelDeltaTimer = null;
-      if (nextIdx !== currentIdx) {
-        scrollToSectionIndex(nextIdx);
-      }
-    };
-
-    // Mobile touch swipe handling
-    let touchStartY = 0;
-    let touchStartX = 0;
-    let touchStartSectionIndex = 0;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      touchStartX = e.touches[0].clientX;
-      touchStartSectionIndex = getCurrentSectionIndex();
-    };
-
-    const handleTouchMove = (e: TouchEvent) => {
-      if (isLightboxOpen || e.touches.length !== 1) return;
-
-      const diffY = touchStartY - e.touches[0].clientY;
-      const diffX = touchStartX - e.touches[0].clientX;
-      if (Math.abs(diffY) < 10 || Math.abs(diffY) < Math.abs(diffX)) return;
-      if (canScrollWithinTarget(e.target, diffY)) return;
-
-      e.preventDefault();
-    };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (isLightboxOpen || isLocked) return;
-
-      const touchEndY = e.changedTouches[0].clientY;
-      const touchEndX = e.changedTouches[0].clientX;
-      const diffY = touchStartY - touchEndY;
-      const diffX = touchStartX - touchEndX;
-
-      if (Math.abs(diffY) < 40 || Math.abs(diffY) < Math.abs(diffX)) return;
-      if (canScrollWithinTarget(e.target, diffY)) return;
-
-      const nextIdx = diffY > 0
-        ? Math.min(touchStartSectionIndex + 1, SECTION_IDS.length - 1)
-        : Math.max(touchStartSectionIndex - 1, 0);
-
-      if (nextIdx !== touchStartSectionIndex) {
-        scrollToSectionIndex(nextIdx);
-      }
-    };
-
-    // Keyboard keys
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (isLightboxOpen) return;
-      if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
-        e.preventDefault();
-        if (isLocked) return;
-        const currentIdx = getCurrentSectionIndex();
-        if (currentIdx < SECTION_IDS.length - 1) {
-          scrollToSectionIndex(currentIdx + 1);
-        }
-      } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
-        e.preventDefault();
-        if (isLocked) return;
-        const currentIdx = getCurrentSectionIndex();
-        if (currentIdx > 0) {
-          scrollToSectionIndex(currentIdx - 1);
-        }
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-      window.removeEventListener('keydown', handleKeyDown);
-      if (lockTimer !== null) window.clearTimeout(lockTimer);
-      if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
-    };
-  }, [isLightboxOpen, onActiveSectionChange]);
 
   // Keyboard navigation for Fullscreen PDF Lightbox
   useEffect(() => {
@@ -530,7 +350,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="home"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-between pt-6 xs:pt-8 sm:pt-10 pb-6 px-3 sm:px-4 text-center snap-start"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-between pt-6 xs:pt-8 sm:pt-10 pb-6 px-3 sm:px-4 text-center"
       >
         <div className="relative w-full max-w-xl mx-auto text-center px-2 sm:px-4 flex flex-col items-center justify-between h-full my-auto space-y-4 sm:space-y-6">
           {/* Ganesha Crest */}
@@ -666,7 +486,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="couple"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center snap-start"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center"
       >
         <div className="max-w-4xl w-full mx-auto flex flex-col items-center">
           {/* Section Pill & Subtitle */}
@@ -824,7 +644,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="events"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-2 sm:px-6 md:pr-8 lg:pr-12 xl:pr-16 md:pl-[24vw] snap-start"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-2 sm:px-6 md:pr-8 lg:pr-12 xl:pr-16 md:pl-[24vw]"
       >
         <div className="w-[82vw] max-w-xl md:w-full md:max-w-3xl lg:max-w-[880px] xl:max-w-[980px] mx-auto md:mr-0 flex flex-col items-center justify-center my-auto">
           {/* Header */}
@@ -995,7 +815,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="venue"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-start pt-10 sm:pt-12 pb-10 px-4 text-center snap-start"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-start pt-10 sm:pt-12 pb-10 px-4 text-center"
       >
         <div className="max-w-4xl lg:max-w-5xl w-full mx-auto px-2 py-0 text-center">
           {/* Header */}
@@ -1091,7 +911,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="invitation"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-4 text-center snap-start"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-4 text-center"
       >
         <div className="max-w-2xl w-full mx-auto px-1 sm:px-2 py-1 text-center">
           {/* Header */}
@@ -1192,7 +1012,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="blessings"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-6 text-center snap-start"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-6 text-center"
       >
         <div className="w-[82vw] md:w-full max-w-5xl mx-auto px-2 py-1 flex flex-col items-center">
           {/* Header */}
@@ -1297,7 +1117,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="footer"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center snap-start"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center"
       >
         <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center justify-between text-center py-2 space-y-5">
           <div className="flex flex-col items-center gap-1">
