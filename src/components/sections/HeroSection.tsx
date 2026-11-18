@@ -35,6 +35,36 @@ interface TimeRemaining {
   isPast: boolean;
 }
 
+const PARTICLES_PER_SECTION = 18;
+const AMBIENT_SCENE_COUNT = 6;
+
+const AMBIENT_PARTICLES = Array.from({ length: PARTICLES_PER_SECTION * AMBIENT_SCENE_COUNT }, (_, index) => {
+  const sectionIndex = Math.floor(index / PARTICLES_PER_SECTION);
+  const localIndex = index % PARTICLES_PER_SECTION;
+  const isLotus = localIndex === 8;
+  const isSparkle = localIndex === 14;
+  const sectionOffset = ((localIndex * 47 + 13) % 91) / 100;
+
+  return {
+    left: `${(localIndex * 37 + 11) % 96}%`,
+    top: `${((sectionIndex + sectionOffset) / AMBIENT_SCENE_COUNT) * 100}%`,
+    delay: `-${(index * 7) % 29}s`,
+    duration: `${24 + (index * 5) % 17}s`,
+    size: isLotus ? '1.2rem' : isSparkle ? '0.95rem' : `${10 + (index % 4) * 2}px`,
+    blur: isLotus || isSparkle ? 0 : (index % 4) * 0.75,
+    opacity: isLotus ? 0.55 : isSparkle ? 0.65 : 0.23 + (localIndex % 4) * 0.03,
+    symbol: isLotus ? '🪷' : isSparkle ? '✦' : null,
+  };
+});
+
+const WeddingSectionOrnament = () => (
+  <div className="wedding-section-ornament" aria-hidden="true">
+    <span>✦</span>
+    <span className="wedding-section-ornament__lotus">🪷</span>
+    <span>✦</span>
+  </div>
+);
+
 // 3-Page Official Wedding Invitation PDF Pages
 const INVITATION_PAGES = [
   {
@@ -275,11 +305,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       className="relative w-full bg-[#F6EDDC] select-none p-0 m-0"
     >
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* ── 1. CONTINUOUS FIXED SANDALWOOD BACKGROUND & CAMERA ── */}
+      {/* ── 1. SCROLLING SANDALWOOD BACKGROUND & CAMERA ── */}
       {/* Temple architecture is shown on the hero section */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <div
-        className={`mobile-architecture-stage fixed inset-0 z-0 pointer-events-none select-none overflow-hidden ${
+        className={`mobile-architecture-stage absolute inset-x-0 top-0 h-screen z-0 pointer-events-none select-none overflow-hidden ${
           activeSection === 'home' ? 'mobile-architecture-stage--home' : ''
         }`}
         style={{
@@ -340,6 +370,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             />
           ))}
         </div>
+      </div>
+
+      <div className="wedding-ambient-particles absolute inset-0 z-[1] overflow-hidden pointer-events-none" aria-hidden="true">
+        {AMBIENT_PARTICLES.map((particle, index) => (
+          <span
+            key={index}
+            className={`wedding-ambient-particle ${
+              particle.symbol
+                ? `wedding-ambient-particle--${particle.symbol === '🪷' ? 'lotus' : 'sparkle'}`
+                : 'wedding-ambient-particle--petal'
+            }`}
+            style={{
+              left: particle.left,
+              top: particle.top,
+              animationDelay: particle.delay,
+              animationDuration: particle.duration,
+              width: particle.symbol ? undefined : particle.size,
+              height: particle.symbol ? undefined : particle.size,
+              fontSize: particle.symbol ? particle.size : undefined,
+              filter: particle.blur ? `blur(${particle.blur}px)` : undefined,
+              opacity: particle.opacity,
+            }}
+          >
+            {particle.symbol}
+          </span>
+        ))}
       </div>
 
       {/* ══════════════════════════════════════════════════════════════════════ */}
@@ -482,8 +538,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="events"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-2 sm:px-6 md:pr-8 lg:pr-12 xl:pr-16 md:pl-[24vw]"
+        className="wedding-scroll-scene relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-2 sm:px-6 md:pr-8 lg:pr-12 xl:pr-16 md:pl-[24vw]"
       >
+        <WeddingSectionOrnament />
         <div className="w-[82vw] max-w-xl md:w-full md:max-w-3xl lg:max-w-[880px] xl:max-w-[980px] mx-auto md:mr-0 flex flex-col items-center justify-center my-auto">
           {/* Header */}
           <div className="text-center mb-6 sm:mb-8 shrink-0 px-2">
@@ -653,8 +710,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="venue"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-start pt-10 sm:pt-12 pb-10 px-4 text-center"
+        className="wedding-scroll-scene relative z-10 w-full min-h-screen flex flex-col items-center justify-start pt-10 sm:pt-12 pb-10 px-4 text-center"
       >
+        <WeddingSectionOrnament />
         <div className="max-w-4xl lg:max-w-5xl w-full mx-auto px-2 py-0 text-center">
           {/* Header */}
           <div className="mb-6 md:mb-8">
@@ -749,8 +807,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="invitation"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-4 text-center"
+        className="wedding-scroll-scene relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-4 text-center"
       >
+        <WeddingSectionOrnament />
         <div className="max-w-2xl w-full mx-auto px-1 sm:px-2 py-1 text-center">
           {/* Header */}
           <div className="text-center mb-4 sm:mb-5">
@@ -850,8 +909,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="blessings"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-6 text-center"
+        className="wedding-scroll-scene relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-6 text-center"
       >
+        <WeddingSectionOrnament />
         <div className="w-[82vw] md:w-full max-w-5xl mx-auto px-2 py-1 flex flex-col items-center">
           {/* Header */}
           <div className="text-center mb-4 sm:mb-5">
@@ -955,8 +1015,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="footer"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center"
+        className="wedding-scroll-scene relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center"
       >
+        <WeddingSectionOrnament />
         <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center justify-between text-center py-2 space-y-5">
           <div className="flex flex-col items-center gap-1">
             <div className="w-12 h-12">
