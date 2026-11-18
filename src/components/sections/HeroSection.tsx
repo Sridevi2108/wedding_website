@@ -166,6 +166,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       return currentIndex;
     };
 
+    const canScrollWithinTarget = (eventTarget: EventTarget | null, deltaY: number): boolean => {
+      let target = eventTarget as HTMLElement | null;
+      while (target && target !== document.body) {
+        const overflowY = window.getComputedStyle(target).overflowY;
+        if ((overflowY === 'auto' || overflowY === 'scroll') && target.scrollHeight > target.clientHeight) {
+          if (deltaY > 0 && target.scrollTop + target.clientHeight < target.scrollHeight - 5) return true;
+          if (deltaY < 0 && target.scrollTop > 5) return true;
+        }
+        target = target.parentElement;
+      }
+      return false;
+    };
+
     const scrollToSectionIndex = (idx: number) => {
       const targetId = SECTION_IDS[idx];
       const targetEl = document.getElementById(targetId);
@@ -182,24 +195,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     const handleWheel = (e: WheelEvent) => {
       if (isLightboxOpen || e.ctrlKey || e.deltaY === 0) return;
 
-      // Allow native scrolling inside nested scrollable containers (e.g. blessings list)
-      let target = e.target as HTMLElement | null;
-      let isInsideScrollable = false;
-      while (target && target !== document.body) {
-        const overflowY = window.getComputedStyle(target).overflowY;
-        if ((overflowY === 'auto' || overflowY === 'scroll') && target.scrollHeight > target.clientHeight) {
-          if (e.deltaY > 0 && target.scrollTop + target.clientHeight < target.scrollHeight - 5) {
-            isInsideScrollable = true;
-            break;
-          }
-          if (e.deltaY < 0 && target.scrollTop > 5) {
-            isInsideScrollable = true;
-            break;
-          }
-        }
-        target = target.parentElement;
-      }
-      if (isInsideScrollable) return;
+      if (canScrollWithinTarget(e.target, e.deltaY)) return;
 
       e.preventDefault();
       if (isLocked) {
@@ -242,6 +238,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       touchStartSectionIndex = getCurrentSectionIndex();
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      if (isLightboxOpen || e.touches.length !== 1) return;
+
+      const diffY = touchStartY - e.touches[0].clientY;
+      const diffX = touchStartX - e.touches[0].clientX;
+      if (Math.abs(diffY) < 10 || Math.abs(diffY) < Math.abs(diffX)) return;
+      if (canScrollWithinTarget(e.target, diffY)) return;
+
+      e.preventDefault();
+    };
+
     const handleTouchEnd = (e: TouchEvent) => {
       if (isLightboxOpen || isLocked) return;
 
@@ -251,24 +258,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       const diffX = touchStartX - touchEndX;
 
       if (Math.abs(diffY) < 40 || Math.abs(diffY) < Math.abs(diffX)) return;
-
-      let target = e.target as HTMLElement | null;
-      let isInsideScrollable = false;
-      while (target && target !== document.body) {
-        const overflowY = window.getComputedStyle(target).overflowY;
-        if ((overflowY === 'auto' || overflowY === 'scroll') && target.scrollHeight > target.clientHeight) {
-          if (diffY > 0 && target.scrollTop + target.clientHeight < target.scrollHeight - 5) {
-            isInsideScrollable = true;
-            break;
-          }
-          if (diffY < 0 && target.scrollTop > 5) {
-            isInsideScrollable = true;
-            break;
-          }
-        }
-        target = target.parentElement;
-      }
-      if (isInsideScrollable) return;
+      if (canScrollWithinTarget(e.target, diffY)) return;
 
       const nextIdx = diffY > 0
         ? Math.min(touchStartSectionIndex + 1, SECTION_IDS.length - 1)
@@ -301,12 +291,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
     window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('touchend', handleTouchEnd, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('keydown', handleKeyDown);
       if (lockTimer !== null) window.clearTimeout(lockTimer);
@@ -538,7 +530,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="home"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-between pt-6 xs:pt-8 sm:pt-10 pb-6 px-3 sm:px-4 text-center snap-start snap-always"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-between pt-6 xs:pt-8 sm:pt-10 pb-6 px-3 sm:px-4 text-center snap-start"
       >
         <div className="relative w-full max-w-xl mx-auto text-center px-2 sm:px-4 flex flex-col items-center justify-between h-full my-auto space-y-4 sm:space-y-6">
           {/* Ganesha Crest */}
@@ -674,7 +666,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="couple"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center snap-start snap-always"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center snap-start"
       >
         <div className="max-w-4xl w-full mx-auto flex flex-col items-center">
           {/* Section Pill & Subtitle */}
@@ -832,7 +824,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="events"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-2 sm:px-6 md:pr-8 lg:pr-12 xl:pr-16 md:pl-[24vw] snap-start snap-always"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-2 sm:px-6 md:pr-8 lg:pr-12 xl:pr-16 md:pl-[24vw] snap-start"
       >
         <div className="w-[82vw] max-w-xl md:w-full md:max-w-3xl lg:max-w-[880px] xl:max-w-[980px] mx-auto md:mr-0 flex flex-col items-center justify-center my-auto">
           {/* Header */}
@@ -1003,7 +995,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="venue"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-start pt-10 sm:pt-12 pb-10 px-4 text-center snap-start snap-always"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-start pt-10 sm:pt-12 pb-10 px-4 text-center snap-start"
       >
         <div className="max-w-4xl lg:max-w-5xl w-full mx-auto px-2 py-0 text-center">
           {/* Header */}
@@ -1099,7 +1091,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="invitation"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-4 text-center snap-start snap-always"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-4 text-center snap-start"
       >
         <div className="max-w-2xl w-full mx-auto px-1 sm:px-2 py-1 text-center">
           {/* Header */}
@@ -1200,7 +1192,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="blessings"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-6 text-center snap-start snap-always"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-3 sm:px-6 text-center snap-start"
       >
         <div className="w-[82vw] md:w-full max-w-5xl mx-auto px-2 py-1 flex flex-col items-center">
           {/* Header */}
@@ -1305,7 +1297,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <section
         id="footer"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center snap-start snap-always"
+        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center snap-start"
       >
         <div className="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center justify-between text-center py-2 space-y-5">
           <div className="flex flex-col items-center gap-1">
