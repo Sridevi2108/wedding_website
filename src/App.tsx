@@ -84,7 +84,7 @@ export default function App() {
 
   // Track active section using IntersectionObserver
   useEffect(() => {
-    const sectionIds = ['home', 'couple', 'events', 'venue', 'invitation', 'blessings', 'footer'];
+    const sectionIds = ['home', 'events', 'venue', 'invitation', 'blessings', 'footer'];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -173,7 +173,6 @@ export default function App() {
               <div className="space-y-1 font-serif-royal text-sm">
                 {[
                   { id: 'home', label: 'Home' },
-                  { id: 'couple', label: 'The Couple' },
                   { id: 'events', label: 'Events Timeline' },
                   { id: 'venue', label: 'Wedding Venues' },
                   { id: 'invitation', label: 'Digital Invitation' },

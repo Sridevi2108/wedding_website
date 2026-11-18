@@ -91,9 +91,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [pulseSeconds, setPulseSeconds] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // The Couple Section active sub-view ('together' | 'groom' | 'bride')
-  const [coupleTab, setCoupleTab] = useState<'together' | 'groom' | 'bride'>('together');
-
   // Events scene state
   const [activeCalendarMenuId, setActiveCalendarMenuId] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -454,7 +451,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex flex-col items-center">
             <div className="flex max-w-[360px] flex-wrap items-center justify-center gap-2">
               {[
-                { id: 'couple', label: '💑 The Couple' },
                 { id: 'events', label: '🎉 Events Timeline' },
                 { id: 'venue', label: '📍 Wedding Venue' },
                 { id: 'invitation', label: '💌 Invitation' },
@@ -477,164 +473,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <span className="font-serif-royal text-[9px] tracking-widest uppercase text-[#8C5514] mb-1">Scroll to Explore</span>
           <div className="w-4 h-7 rounded-full border border-[#C49A58] flex items-start justify-center p-1">
             <div className="w-1.5 h-1.5 rounded-full bg-[#98502F] animate-bounce" />
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* ── SECTION 1: THE COUPLE (Together, Groom, Bride Views) ── */}
-      {/* ══════════════════════════════════════════════════════════════════════ */}
-      <section
-        id="couple"
-        className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-10 px-4 text-center"
-      >
-        <div className="max-w-4xl w-full mx-auto flex flex-col items-center">
-          {/* Section Pill & Subtitle */}
-          <div className="mb-4 sm:mb-6">
-            <div className="inline-flex items-center space-x-2 bg-[#FFFDF9]/95 border border-[#C49A58]/70 px-3.5 py-0.5 rounded-full shadow-2xs mb-1.5">
-              <span className="text-xs text-[#C49A58]">✦</span>
-              <span className="text-[10px] sm:text-xs font-serif-royal font-bold uppercase tracking-widest text-[#98502F]">
-                The Couple
-              </span>
-              <span className="text-xs text-[#C49A58]">✦</span>
-            </div>
-            <h2 className="font-serif-royal text-2xl sm:text-3xl md:text-4xl font-bold text-[#7A281E]">
-              C. Vignesh &amp; S. Pavithra
-            </h2>
-          </div>
-
-          {/* Tab Selector Pills */}
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-4 sm:mb-6">
-            {[
-              { id: 'together', label: '💑 The Couple' },
-              { id: 'groom', label: '✦ Groom: Vignesh' },
-              { id: 'bride', label: '✦ Bride: Pavithra' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setCoupleTab(tab.id as any)}
-                className={`theme-card theme-card--glass border border-[#C49A58]/70 px-3 sm:px-4 py-1.5 rounded-full text-xs font-serif-royal font-bold transition-all cursor-pointer ${
-                  coupleTab === tab.id
-                    ? 'text-[#7A281E] shadow-md scale-105'
-                    : 'text-[#7A3A1B] hover:border-[#C49A58]'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Couple Stage Content */}
-          <div className="relative w-full flex items-center justify-center">
-            {/* Left Chevron */}
-            <button
-              onClick={() => {
-                const tabs: ('together' | 'groom' | 'bride')[] = ['together', 'groom', 'bride'];
-                const idx = tabs.indexOf(coupleTab);
-                setCoupleTab(tabs[(idx + 2) % 3]);
-              }}
-              className="hidden sm:flex absolute left-0 z-20 w-10 h-10 rounded-full bg-[#FFFDF9]/90 border border-[#C49A58] text-[#98502F] items-center justify-center shadow-md hover:scale-110 active:scale-95 transition-all cursor-pointer"
-              title="Previous"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            {/* TAB 1: COUPLE TOGETHER */}
-            {coupleTab === 'together' && (
-              <div className="flex flex-col items-center max-w-lg w-full text-center animate-fadeIn">
-                <div className="relative group mb-3 sm:mb-4">
-                  <div className="absolute -inset-2 sm:-inset-2.5 rounded-[2rem] sm:rounded-[2.5rem] border-2 border-[#C49A58]/70 shadow-2xl" />
-                  <div className="w-52 h-70 sm:w-64 sm:h-84 md:w-72 md:h-92 rounded-[1.8rem] sm:rounded-[2.2rem] overflow-hidden border-3 sm:border-4 border-[#C49A58] shadow-2xl bg-[#FFFDF9]">
-                    <img
-                      src="/assets/couple/couple_together.jpg"
-                      alt="C. Vignesh & S. Pavithra"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
-                </div>
-
-                <div className="theme-card theme-card--glass border border-[#C49A58]/80 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-xl max-w-sm sm:max-w-md w-full">
-                  <h3 className="font-serif-royal text-xl sm:text-2xl font-bold text-[#7A281E]">
-                    Vignesh &amp; Pavithra
-                  </h3>
-                  <div className="w-10 sm:w-12 h-[1.5px] bg-[#C49A58] mx-auto my-1.5" />
-                  <p className="font-cormorant italic text-sm sm:text-lg text-[#98502F] font-semibold">
-                    &ldquo;Two hearts, one beautiful beginning.&rdquo;
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 2: GROOM VIGNESH */}
-            {coupleTab === 'groom' && (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 w-full max-w-2xl animate-fadeIn">
-                <div className="relative group shrink-0">
-                  <div className="absolute -inset-2 sm:-inset-2.5 rounded-[2rem] sm:rounded-[2.4rem] border-2 border-[#C49A58]/70 shadow-2xl" />
-                  <div className="w-48 h-64 sm:w-60 sm:h-80 rounded-[1.8rem] sm:rounded-[2.2rem] overflow-hidden border-3 sm:border-4 border-[#C49A58] shadow-2xl bg-[#FFFDF9]">
-                    <img
-                      src="/assets/couple/vignesh.jpg"
-                      alt="C. Vignesh — Groom"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
-                </div>
-
-                <div className="theme-card theme-card--glass text-center sm:text-left border border-[#C49A58]/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl max-w-sm">
-                  <span className="text-[10px] font-serif-royal uppercase tracking-widest text-[#98502F] font-bold block mb-1">
-                    ✦ The Groom
-                  </span>
-                  <h3 className="font-serif-royal text-2xl sm:text-3xl font-bold text-[#7A281E] mb-1">
-                    C. Vignesh
-                  </h3>
-                  <div className="w-10 h-[1.5px] bg-[#C49A58] mb-2.5 mx-auto sm:mx-0" />
-                  <p className="font-cormorant italic text-base sm:text-xl text-[#98502F] font-medium leading-relaxed">
-                    &ldquo;Thoughtful, devoted, and ever-gracious.&rdquo;
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* TAB 3: BRIDE PAVITHRA */}
-            {coupleTab === 'bride' && (
-              <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-4 sm:gap-8 w-full max-w-2xl animate-fadeIn">
-                <div className="theme-card theme-card--glass text-center sm:text-right border border-[#C49A58]/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl max-w-sm">
-                  <span className="text-[10px] font-serif-royal uppercase tracking-widest text-[#98502F] font-bold block mb-1">
-                    ✦ The Bride
-                  </span>
-                  <h3 className="font-serif-royal text-2xl sm:text-3xl font-bold text-[#7A281E] mb-1">
-                    S. Pavithra
-                  </h3>
-                  <div className="w-10 h-[1.5px] bg-[#C49A58] mb-2.5 mx-auto sm:ml-auto sm:mr-0" />
-                  <p className="font-cormorant italic text-base sm:text-xl text-[#98502F] font-medium leading-relaxed">
-                    &ldquo;Graceful, radiant, and full of warmth.&rdquo;
-                  </p>
-                </div>
-
-                <div className="relative group shrink-0">
-                  <div className="absolute -inset-2 sm:-inset-2.5 rounded-[2rem] sm:rounded-[2.4rem] border-2 border-[#C49A58]/70 shadow-2xl" />
-                  <div className="w-48 h-64 sm:w-60 sm:h-80 rounded-[1.8rem] sm:rounded-[2.2rem] overflow-hidden border-3 sm:border-4 border-[#C49A58] shadow-2xl bg-[#FFFDF9]">
-                    <img
-                      src="/assets/couple/pavithra.jpg"
-                      alt="S. Pavithra — Bride"
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Right Chevron */}
-            <button
-              onClick={() => {
-                const tabs: ('together' | 'groom' | 'bride')[] = ['together', 'groom', 'bride'];
-                const idx = tabs.indexOf(coupleTab);
-                setCoupleTab(tabs[(idx + 1) % 3]);
-              }}
-              className="hidden sm:flex absolute right-0 z-20 w-10 h-10 rounded-full bg-[#FFFDF9]/90 border border-[#C49A58] text-[#98502F] items-center justify-center shadow-md hover:scale-110 active:scale-95 transition-all cursor-pointer"
-              title="Next"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </section>
