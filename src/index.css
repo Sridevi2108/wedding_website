@@ -368,8 +368,33 @@ html[data-theme='dark'] .theme-light-architecture {
   }
 }
 
-.wedding-scroll-scene {
+.wedding-scroll-scene,
+#home {
   isolation: isolate;
+}
+
+.wedding-scroll-scene::before,
+#home::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/assets/temple_hero_mobile_v3.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  content: '';
+  opacity: 0.1;
+  pointer-events: none;
+  mask-image: linear-gradient(90deg, #000 0%, #000 8%, transparent 28%, transparent 72%, #000 92%, #000 100%);
+}
+
+.wedding-scroll-scene > :not(.wedding-section-ornament),
+#home > * {
+  position: relative;
+  z-index: 1;
+}
+
+.wedding-scroll-scene {
   background-image:
     radial-gradient(ellipse 78% 58% at var(--scene-glow-one, 18%) 20%, rgba(196, 154, 88, 0.13) 0%, transparent 76%),
     radial-gradient(ellipse 58% 42% at var(--scene-glow-two, 84%) 82%, rgba(152, 80, 47, 0.08) 0%, transparent 75%);
@@ -407,6 +432,24 @@ html[data-theme='dark'] .wedding-scroll-scene {
   background-image:
     radial-gradient(ellipse 78% 58% at var(--scene-glow-one, 18%) 20%, rgba(229, 195, 120, 0.12) 0%, transparent 76%),
     radial-gradient(ellipse 58% 42% at var(--scene-glow-two, 84%) 82%, rgba(139, 34, 49, 0.18) 0%, transparent 75%);
+}
+
+html[data-theme='dark'] .wedding-scroll-scene::before,
+html[data-theme='dark'] #home::before {
+  background-image: url('/assets/dark-theme/wedding-mobile-reference.png');
+  mix-blend-mode: screen;
+}
+
+@media (min-width: 768px) {
+  .wedding-scroll-scene::before,
+  #home::before {
+    background-image: url('/assets/temple_hero_clean_v3.png');
+  }
+
+  html[data-theme='dark'] .wedding-scroll-scene::before,
+  html[data-theme='dark'] #home::before {
+    background-image: url('/assets/dark-theme/wedding-desktop-reference.png');
+  }
 }
 
 .wedding-section-ornament {
@@ -469,7 +512,7 @@ html[data-theme='dark'] .wedding-scroll-scene {
   background: linear-gradient(145deg, rgba(255, 232, 224, 0.88), rgba(225, 146, 132, 0.58) 58%, rgba(196, 154, 88, 0.46));
   box-shadow: 0 0 14px rgba(229, 195, 120, 0.3);
   animation-name: wedding-petal-drift;
-  animation-timing-function: ease-in-out;
+  animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
@@ -536,11 +579,20 @@ html[data-theme='dark'] .wedding-ambient-particle--petal {
 }
 
 @keyframes wedding-petal-drift {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) rotate(-18deg) scale(0.82);
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -42px, 0) rotate(-35deg) scale(0.82);
   }
-  50% {
-    transform: translate3d(16px, -20px, 0) rotate(72deg) scale(1.12);
+  18% {
+    opacity: 0.9;
+  }
+  55% {
+    opacity: 0.8;
+    transform: translate3d(58px, -8px, 0) rotate(175deg) scale(1.12);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-38px, 118px, 0) rotate(385deg) scale(0.9);
   }
 }
 

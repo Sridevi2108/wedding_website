@@ -35,24 +35,25 @@ interface TimeRemaining {
   isPast: boolean;
 }
 
-const PARTICLES_PER_SECTION = 18;
+const PARTICLES_PER_SECTION = 24;
 const AMBIENT_SCENE_COUNT = 6;
 
 const AMBIENT_PARTICLES = Array.from({ length: PARTICLES_PER_SECTION * AMBIENT_SCENE_COUNT }, (_, index) => {
   const sectionIndex = Math.floor(index / PARTICLES_PER_SECTION);
   const localIndex = index % PARTICLES_PER_SECTION;
-  const isLotus = localIndex === 8;
-  const isSparkle = localIndex === 14;
+  const isLotus = localIndex === 12;
+  const isSparkle = localIndex === 18;
+  const isBlurred = localIndex % 3 !== 0;
   const sectionOffset = ((localIndex * 47 + 13) % 91) / 100;
 
   return {
     left: `${(localIndex * 37 + 11) % 96}%`,
     top: `${((sectionIndex + sectionOffset) / AMBIENT_SCENE_COUNT) * 100}%`,
     delay: `-${(index * 7) % 29}s`,
-    duration: `${24 + (index * 5) % 17}s`,
-    size: isLotus ? '1.2rem' : isSparkle ? '0.95rem' : `${10 + (index % 4) * 2}px`,
-    blur: isLotus || isSparkle ? 0 : (index % 4) * 0.75,
-    opacity: isLotus ? 0.55 : isSparkle ? 0.65 : 0.23 + (localIndex % 4) * 0.03,
+    duration: `${12 + (index * 5) % 9}s`,
+    size: isLotus ? '1.2rem' : isSparkle ? '0.95rem' : `${8 + (localIndex % 5) * 2}px`,
+    blur: isLotus || isSparkle || !isBlurred ? 0 : 1 + (localIndex % 4) * 0.6,
+    opacity: isLotus ? 0.55 : isSparkle ? 0.65 : isBlurred ? 0.32 : 0.48,
     symbol: isLotus ? '🪷' : isSparkle ? '✦' : null,
   };
 });
