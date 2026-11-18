@@ -34,16 +34,12 @@ export const WEDDING_CONFIG = {
     groom: {
       fullName: 'C. Vignesh',
       shortName: 'Vignesh',
-      family: 'Son of Gayatri & Ravi Shanker',
-      parents: 'Gayatri & Ravi Shanker',
       role: 'Groom',
       bio: 'Known for his thoughtful demeanor, deep respect for family traditions, and devotion to making every shared moment memorable.',
     },
     bride: {
       fullName: 'S. Pavithra',
       shortName: 'Pavithra',
-      family: 'Daughter of Geetha & Sethuraman Babu',
-      parents: 'Geetha & Sethuraman Babu',
       role: 'Bride',
       bio: 'Cherished for her grace, warm smile, and artistic soul, bringing joy, laughter, and radiance to every room she enters.',
     },

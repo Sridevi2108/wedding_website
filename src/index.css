@@ -3,6 +3,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     color-scheme: light;
     --theme-background: #F8F2E7;
@@ -19,18 +20,23 @@
     color-scheme: dark;
     --theme-background: #300609;
     --theme-background-secondary: #3B080D;
-    --theme-surface: #480D13;
+    --theme-surface: #5C161F;
     --theme-text: #E8C477;
     --theme-text-secondary: #D8B77A;
-    --theme-accent: #C99B48;
-    --theme-highlight: #D5A64F;
-    --theme-border: #C99B48;
+    --theme-accent: #E5C378;
+    --theme-highlight: #FFE599;
+    --theme-border: #E5C378;
   }
 
   body,
   #root {
     min-height: 100%;
     background-color: var(--theme-background);
+  }
+
+  section[id] {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 
   html[data-theme='dark'] body,
@@ -210,12 +216,34 @@ html[data-theme='dark'] [class*='bg-[#F5EDE1]'] {
 html[data-theme='dark'] [class*='bg-[#FFFDF9]'],
 html[data-theme='dark'] [class*='bg-[#FFFFFF]'],
 html[data-theme='dark'] [class~='bg-white'] {
-  background-color: var(--theme-surface) !important;
+  background: linear-gradient(165deg, rgba(92, 22, 31, 0.96) 0%, rgba(58, 11, 17, 0.98) 100%) !important;
+  border-color: #E5C378 !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85), 0 0 20px rgba(212, 163, 89, 0.32), inset 0 1px 1px rgba(255, 241, 184, 0.22) !important;
+}
+
+html[data-theme='dark'] [class*='bg-[#FAF5EC]'] {
+  background-color: rgba(50, 10, 16, 0.92) !important;
+  border-color: rgba(229, 195, 120, 0.65) !important;
 }
 
 html[data-theme='dark'] [class*='from-[#FFFDF9]'],
 html[data-theme='dark'] [class*='from-[#FAF5EC]'] {
   background-image: linear-gradient(180deg, var(--theme-surface), var(--theme-background-secondary)) !important;
+}
+
+html[data-theme='dark'] .theme-card {
+  background: linear-gradient(155deg, #6A1B27 0%, #4B0D16 100%) !important;
+  border-color: #F0CC7A !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.75), 0 0 18px rgba(229, 195, 120, 0.3), inset 0 1px 1px rgba(255, 241, 184, 0.24) !important;
+}
+
+.theme-card--glass {
+  background: rgba(255, 253, 249, 0.24);
+  backdrop-filter: blur(5px);
+}
+
+html[data-theme='dark'] .theme-card--glass {
+  background: rgba(48, 6, 9, 0.22) !important;
 }
 
 html[data-theme='dark'] [class*='text-[#45352A]'],
@@ -543,7 +571,10 @@ html[data-theme='dark'] .theme-light-architecture {
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: radial-gradient(ellipse at center, var(--theme-surface) 0%, var(--theme-background) 72%);
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(196, 154, 88, 0.2) 0%, transparent 35%),
+    radial-gradient(ellipse at center, var(--theme-surface) 0%, var(--theme-background) 74%);
   color: var(--theme-text);
   opacity: 1;
   transition: opacity 550ms ease, visibility 550ms ease;
@@ -551,12 +582,51 @@ html[data-theme='dark'] .theme-light-architecture {
 
 .wedding-loading-screen::before {
   position: absolute;
-  inset: 20px;
-  border: 1px solid var(--theme-accent);
-  border-radius: 18px;
+  inset: 16px;
+  border: 1px solid rgba(196, 154, 88, 0.58);
+  border-radius: 20px;
   content: '';
-  opacity: 0.45;
+  box-shadow: inset 0 0 35px rgba(196, 154, 88, 0.07), 0 0 35px rgba(196, 154, 88, 0.08);
   pointer-events: none;
+}
+
+.wedding-loading-screen__ornaments {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wedding-loading-screen__petal {
+  position: absolute;
+  color: var(--theme-accent);
+  text-shadow: 0 0 14px rgba(196, 154, 88, 0.7);
+  animation: wedding-star-drift 4s ease-in-out infinite;
+}
+
+.wedding-loading-screen__petal--one {
+  top: 22%;
+  left: 19%;
+}
+
+.wedding-loading-screen__petal--two {
+  top: 29%;
+  right: 18%;
+  animation-delay: -1.2s;
+}
+
+.wedding-loading-screen__petal--three {
+  right: 22%;
+  bottom: 23%;
+  font-size: 0.75rem;
+  animation-delay: -2.4s;
+}
+
+.wedding-loading-screen__petal--four {
+  bottom: 27%;
+  left: 20%;
+  font-size: 0.8rem;
+  animation-delay: -0.8s;
 }
 
 .wedding-loading-screen.is-leaving {
@@ -571,77 +641,133 @@ html[data-theme='dark'] .theme-light-architecture {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  animation: wedding-loading-arrive 700ms ease-out both;
+  animation: wedding-loading-arrive 900ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
 }
 
 .wedding-loading-screen__om {
+  margin-bottom: 0.65rem;
   color: var(--theme-accent);
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(3.5rem, 14vw, 5rem);
+  font-size: clamp(1.3rem, 5vw, 1.7rem);
   line-height: 1;
-  text-shadow: 0 0 22px rgba(196, 154, 88, 0.35);
+  text-shadow: 0 0 12px rgba(196, 154, 88, 0.3);
+}
+
+.wedding-loading-screen__eyebrow {
+  margin: 0;
+  color: var(--theme-text-secondary);
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
 .wedding-loading-screen__divider {
-  margin: 0.8rem 0 1rem;
+  margin: 0.7rem 0 0.75rem;
   color: var(--theme-accent);
   font-size: 1.15rem;
+  animation: wedding-star-drift 2.8s ease-in-out infinite;
 }
 
 .wedding-loading-screen__names {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  column-gap: 0.4em;
   margin: 0;
   font-family: 'Cinzel', serif;
-  font-size: clamp(1.35rem, 6vw, 2.35rem);
+  font-size: clamp(1.25rem, 5.4vw, 2.35rem);
   font-weight: 700;
   letter-spacing: 0.055em;
   line-height: 1.35;
+  animation: wedding-loading-arrive 850ms 120ms ease-out both;
 }
 
-.wedding-loading-screen__names span {
+.wedding-loading-screen__names .wedding-loading-screen__amp {
   color: var(--theme-accent);
 }
 
 .wedding-loading-screen__subtitle {
-  margin: 0.65rem 0 0;
+  margin: 0.8rem 0 0;
   color: var(--theme-accent);
   font-family: 'Cinzel', serif;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.28em;
+  animation: wedding-loading-arrive 800ms 240ms ease-out both;
 }
 
-.wedding-loading-screen__lamp {
-  position: relative;
-  width: 42px;
-  height: 15px;
-  margin-top: 2rem;
-  border: 1px solid var(--theme-accent);
-  border-radius: 50% 50% 45% 45%;
-  background: linear-gradient(180deg, transparent 35%, rgba(196, 154, 88, 0.22));
+.wedding-loading-screen__date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  color: var(--theme-text-secondary);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1rem;
+  letter-spacing: 0.035em;
 }
 
-.wedding-loading-screen__lamp span {
-  position: absolute;
-  bottom: 11px;
-  left: 16px;
-  width: 8px;
-  height: 15px;
-  border-radius: 55% 45% 55% 45%;
-  background: radial-gradient(ellipse at 50% 72%, #fff8cc 0%, #d48b28 58%, transparent 76%);
-  filter: drop-shadow(0 0 7px rgba(212, 139, 40, 0.6));
-  animation: wedding-lamp-flicker 900ms ease-in-out infinite alternate;
+.wedding-loading-screen__date span {
+  color: var(--theme-accent);
 }
 
 .wedding-loading-screen__message {
-  margin: 0.8rem 0 0;
+  min-height: 1.4em;
+  margin: 1.8rem 0 0;
   color: var(--theme-text-secondary);
   font-family: 'Cormorant Garamond', Georgia, serif;
   font-size: 1rem;
   font-style: italic;
+  animation: wedding-loading-arrive 420ms ease-out both;
+}
+
+.wedding-loading-screen__progress {
+  width: min(52vw, 190px);
+  height: 2px;
+  margin-top: 1.4rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(196, 154, 88, 0.2);
+}
+
+.wedding-loading-screen__progress span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, transparent, var(--theme-highlight), transparent);
+  animation: wedding-progress-sweep 1.5s ease-in-out infinite;
 }
 
 html[data-theme='dark'] .wedding-loading-screen {
-  background: radial-gradient(ellipse at center, #480D13 0%, #300609 72%);
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(229, 195, 120, 0.13) 0%, transparent 36%),
+    radial-gradient(ellipse at center, #480D13 0%, #300609 74%);
+}
+
+.wedding-section-reveal.is-visible {
+  animation: wedding-section-arrive 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+  backface-visibility: hidden;
+}
+
+button:not(:disabled),
+a[href] {
+  transition: filter 180ms ease, box-shadow 220ms ease, background-color 220ms ease, border-color 220ms ease;
+}
+
+button:not(:disabled):hover,
+a[href]:hover {
+  filter: brightness(1.06);
+}
+
+.theme-card {
+  transition: box-shadow 260ms ease, border-color 260ms ease;
+}
+
+.theme-card:hover {
+  box-shadow: 0 16px 38px rgba(48, 6, 9, 0.22);
 }
 
 @keyframes wedding-loading-arrive {
@@ -655,14 +781,34 @@ html[data-theme='dark'] .wedding-loading-screen {
   }
 }
 
-@keyframes wedding-lamp-flicker {
+@keyframes wedding-section-arrive {
   from {
-    opacity: 0.75;
-    transform: scale(0.9) rotate(-3deg);
+    opacity: 0.78;
+    transform: translate3d(0, 14px, 0);
   }
   to {
     opacity: 1;
-    transform: scale(1.08) rotate(3deg);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes wedding-star-drift {
+  0%, 100% {
+    opacity: 0.55;
+    transform: translateY(0) scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-7px) scale(1.08);
+  }
+}
+
+@keyframes wedding-progress-sweep {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(260%);
   }
 }
 
@@ -673,9 +819,25 @@ html[data-theme='dark'] .wedding-loading-screen {
 
   .wedding-loading-screen,
   .wedding-loading-screen__content,
-  .wedding-loading-screen__lamp span {
+  .wedding-loading-screen__ornaments *,
+  .wedding-loading-screen__names,
+  .wedding-loading-screen__subtitle,
+  .wedding-loading-screen__message,
+  .wedding-loading-screen__progress span,
+  .wedding-section-reveal.is-visible,
+  button:not(:disabled),
+  a[href],
+  .theme-card {
     animation: none;
     transition: none;
+  }
+
+  .wedding-loading-screen__content,
+  .wedding-loading-screen__names,
+  .wedding-loading-screen__subtitle,
+  .wedding-section-reveal.is-visible {
+    opacity: 1;
+    transform: none;
   }
 }
 

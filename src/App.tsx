@@ -12,10 +12,10 @@ import { weddingAudio } from './utils/weddingAudio';
 export default function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(() => {
     try {
-      return localStorage.getItem('wedding_theme') === 'dark';
+      return localStorage.getItem('wedding_theme') !== 'light';
     } catch (error) {
       console.warn('Theme preference read notice:', error);
-      return document.documentElement.dataset.theme === 'dark';
+      return document.documentElement.dataset.theme !== 'light';
     }
   });
   const [blessings, setBlessings] = useState<Blessing[]>([]);
@@ -82,47 +82,41 @@ export default function App() {
     };
   }, [fetchBlessings]);
 
-  // Track active section on scroll through the unified movie runway
+  // Track active section using IntersectionObserver
   useEffect(() => {
-    const handleScroll = () => {
-      const runway = document.getElementById('home');
-      if (runway) {
-        const rect = runway.getBoundingClientRect();
-        const totalScroll = runway.offsetHeight - window.innerHeight;
-        if (totalScroll > 0) {
-          const currentScroll = -rect.top;
-          const p = Math.min(Math.max(currentScroll / totalScroll, 0), 1);
-          if (p < 0.12) setActiveSection('home');
-          else if (p < 0.49) setActiveSection('couple');
-          else if (p < 0.63) setActiveSection('events');
-          else if (p < 0.76) setActiveSection('venue');
-          else if (p < 0.88) setActiveSection('invitation');
-          else setActiveSection('blessings');
-        }
-      }
-    };
+    const sectionIds = ['home', 'couple', 'events', 'venue', 'invitation', 'blessings', 'footer'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('wedding-section-reveal', 'is-visible');
+          }
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
+            const id = entry.target.id;
+            if (id === 'footer') {
+              setActiveSection('blessings');
+            } else if (sectionIds.includes(id)) {
+              setActiveSection(id);
+            }
+          }
+        });
+      },
+      { threshold: [0.4, 0.6] }
+    );
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const scrollToSection = (id: string) => {
-    const targets: Record<string, number> = {
-      home: 0.00,
-      couple: 0.20,
-      events: 0.54,
-      venue: 0.68,
-      invitation: 0.81,
-      blessings: 0.92,
-      'blessing-tree': 0.92,
-    };
-    const targetP = targets[id] ?? 0;
-    const runway = document.getElementById('home');
-    if (runway) {
-      const totalScroll = runway.offsetHeight - window.innerHeight;
-      const targetY = runway.offsetTop + targetP * totalScroll;
-      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    const targetId = id === 'blessing-tree' ? 'blessings' : id;
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
@@ -224,6 +218,7 @@ export default function App() {
           onPlantBlessingClick={() => setIsPlantModalOpen(true)}
           onOpenMenu={() => setIsMenuDrawerOpen(true)}
           isDarkTheme={isDarkTheme}
+          onActiveSectionChange={setActiveSection}
         />
       </main>
 
