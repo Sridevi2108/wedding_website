@@ -218,6 +218,7 @@ export default function App() {
           onPlantBlessingClick={() => setIsPlantModalOpen(true)}
           onOpenMenu={() => setIsMenuDrawerOpen(true)}
           isDarkTheme={isDarkTheme}
+          activeSection={activeSection}
           onActiveSectionChange={setActiveSection}
         />
       </main>

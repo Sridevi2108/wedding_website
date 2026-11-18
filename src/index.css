@@ -364,6 +364,14 @@ html[data-theme='dark'] .theme-light-architecture {
   html[data-theme='dark'] .theme-dark-architecture--mobile {
     display: block;
   }
+
+  .mobile-architecture-stage:not(.mobile-architecture-stage--home) .theme-light-architecture img {
+    display: none !important;
+  }
+
+  .mobile-architecture-stage:not(.mobile-architecture-stage--home) .theme-dark-architecture--mobile {
+    background-image: none !important;
+  }
 }
 
 /* 3D Transform & Perspective Utilities */

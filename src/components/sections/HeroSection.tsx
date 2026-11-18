@@ -23,6 +23,7 @@ interface HeroSectionProps {
   onPlantBlessingClick: () => void;
   onOpenMenu?: () => void;
   isDarkTheme: boolean;
+  activeSection: string;
   onActiveSectionChange?: (section: string) => void;
 }
 
@@ -66,6 +67,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onPlantBlessingClick,
   onOpenMenu,
   isDarkTheme,
+  activeSection,
   onActiveSectionChange,
 }) => {
   // Target: Monday, 14 December 2026 06:15 AM IST (Asia/Kolkata)
@@ -437,11 +439,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       className="relative w-full bg-[#F6EDDC] select-none p-0 m-0"
     >
       {/* ══════════════════════════════════════════════════════════════════════ */}
-      {/* ── 1. CONTINUOUS FIXED SANDALWOOD TEMPLE BACKGROUND & CAMERA ── */}
-      {/* Flawless Dravidian temple architecture visible behind all sections */}
+      {/* ── 1. CONTINUOUS FIXED SANDALWOOD BACKGROUND & CAMERA ── */}
+      {/* Temple architecture is shown on the hero section */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <div
-        className="fixed inset-0 z-0 pointer-events-none select-none overflow-hidden"
+        className={`mobile-architecture-stage fixed inset-0 z-0 pointer-events-none select-none overflow-hidden ${
+          activeSection === 'home' ? 'mobile-architecture-stage--home' : ''
+        }`}
         style={{
           transform: `translate3d(${mousePos.x * -8}px, ${mousePos.y * -5}px, 0px) rotateY(${mousePos.x * 0.4}deg)`,
           transformOrigin: '50% 60%',
