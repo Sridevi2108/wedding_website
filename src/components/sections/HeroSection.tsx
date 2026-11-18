@@ -135,6 +135,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   useEffect(() => {
     let isLocked = false;
     let lockTimer: number | null = null;
+    let wheelDeltaTimer: number | null = null;
+    let accumulatedWheelDelta = 0;
+    const scrollLockDuration = 900;
+
+    const extendScrollLock = () => {
+      if (lockTimer !== null) window.clearTimeout(lockTimer);
+      lockTimer = window.setTimeout(() => {
+        isLocked = false;
+        lockTimer = null;
+      }, scrollLockDuration);
+    };
 
     const getCurrentSectionIndex = (): number => {
       let currentIndex = 0;
@@ -164,15 +175,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         if (onActiveSectionChange) {
           onActiveSectionChange(targetId === 'footer' ? 'blessings' : targetId);
         }
-        if (lockTimer) window.clearTimeout(lockTimer);
-        lockTimer = window.setTimeout(() => {
-          isLocked = false;
-        }, 650);
+        extendScrollLock();
       }
     };
 
     const handleWheel = (e: WheelEvent) => {
-      if (isLightboxOpen) return;
+      if (isLightboxOpen || e.ctrlKey || e.deltaY === 0) return;
 
       // Allow native scrolling inside nested scrollable containers (e.g. blessings list)
       let target = e.target as HTMLElement | null;
@@ -193,16 +201,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       }
       if (isInsideScrollable) return;
 
-      if (Math.abs(e.deltaY) < 18) return;
-
       e.preventDefault();
-      if (isLocked) return;
+      if (isLocked) {
+        accumulatedWheelDelta = 0;
+        if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
+        wheelDeltaTimer = null;
+        extendScrollLock();
+        return;
+      }
+
+      accumulatedWheelDelta += e.deltaY;
+      if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
+      wheelDeltaTimer = window.setTimeout(() => {
+        accumulatedWheelDelta = 0;
+        wheelDeltaTimer = null;
+      }, 220);
+      if (Math.abs(accumulatedWheelDelta) < 18) return;
 
       const currentIdx = getCurrentSectionIndex();
-      const nextIdx = e.deltaY > 0
+      const nextIdx = accumulatedWheelDelta > 0
         ? Math.min(currentIdx + 1, SECTION_IDS.length - 1)
         : Math.max(currentIdx - 1, 0);
 
+      accumulatedWheelDelta = 0;
+      if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
+      wheelDeltaTimer = null;
       if (nextIdx !== currentIdx) {
         scrollToSectionIndex(nextIdx);
       }
@@ -211,10 +234,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     // Mobile touch swipe handling
     let touchStartY = 0;
     let touchStartX = 0;
+    let touchStartSectionIndex = 0;
 
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
       touchStartX = e.touches[0].clientX;
+      touchStartSectionIndex = getCurrentSectionIndex();
     };
 
     const handleTouchEnd = (e: TouchEvent) => {
@@ -245,12 +270,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       }
       if (isInsideScrollable) return;
 
-      const currentIdx = getCurrentSectionIndex();
       const nextIdx = diffY > 0
-        ? Math.min(currentIdx + 1, SECTION_IDS.length - 1)
-        : Math.max(currentIdx - 1, 0);
+        ? Math.min(touchStartSectionIndex + 1, SECTION_IDS.length - 1)
+        : Math.max(touchStartSectionIndex - 1, 0);
 
-      if (nextIdx !== currentIdx) {
+      if (nextIdx !== touchStartSectionIndex) {
         scrollToSectionIndex(nextIdx);
       }
     };
@@ -260,12 +284,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       if (isLightboxOpen) return;
       if (['ArrowDown', 'PageDown', ' '].includes(e.key)) {
         e.preventDefault();
+        if (isLocked) return;
         const currentIdx = getCurrentSectionIndex();
         if (currentIdx < SECTION_IDS.length - 1) {
           scrollToSectionIndex(currentIdx + 1);
         }
       } else if (['ArrowUp', 'PageUp'].includes(e.key)) {
         e.preventDefault();
+        if (isLocked) return;
         const currentIdx = getCurrentSectionIndex();
         if (currentIdx > 0) {
           scrollToSectionIndex(currentIdx - 1);
@@ -283,7 +309,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('keydown', handleKeyDown);
-      if (lockTimer) window.clearTimeout(lockTimer);
+      if (lockTimer !== null) window.clearTimeout(lockTimer);
+      if (wheelDeltaTimer !== null) window.clearTimeout(wheelDeltaTimer);
     };
   }, [isLightboxOpen, onActiveSectionChange]);
 
