@@ -365,8 +365,7 @@ html[data-theme='dark'] .theme-light-architecture {
   isolation: isolate;
 }
 
-.wedding-scroll-scene::before,
-#home::before {
+.wedding-scroll-scene::before {
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -426,20 +425,17 @@ html[data-theme='dark'] .wedding-scroll-scene {
     radial-gradient(ellipse 58% 42% at var(--scene-glow-two, 84%) 82%, rgba(139, 34, 49, 0.18) 0%, transparent 75%);
 }
 
-html[data-theme='dark'] .wedding-scroll-scene::before,
-html[data-theme='dark'] #home::before {
+html[data-theme='dark'] .wedding-scroll-scene::before {
   background-image: url('/assets/dark-theme/wedding-mobile-reference.png');
   mix-blend-mode: screen;
 }
 
 @media (min-width: 768px) {
-  .wedding-scroll-scene::before,
-  #home::before {
+  .wedding-scroll-scene::before {
     background-image: url('/assets/temple_hero_clean_v3.png');
   }
 
-  html[data-theme='dark'] .wedding-scroll-scene::before,
-  html[data-theme='dark'] #home::before {
+  html[data-theme='dark'] .wedding-scroll-scene::before {
     background-image: url('/assets/dark-theme/wedding-desktop-reference.png');
   }
 }
