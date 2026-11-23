@@ -372,11 +372,11 @@ html[data-theme='dark'] .theme-light-architecture {
   background-image: url('/assets/temple_hero_mobile_v3.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: 100% 100%;
   content: '';
-  opacity: 0.1;
+  opacity: 0.16;
   pointer-events: none;
-  mask-image: linear-gradient(90deg, #000 0%, #000 8%, transparent 28%, transparent 72%, #000 92%, #000 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 12%, transparent 42%, transparent 58%, #000 88%, #000 100%);
 }
 
 .wedding-scroll-scene > :not(.wedding-section-ornament),
