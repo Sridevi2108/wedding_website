@@ -380,10 +380,6 @@ html[data-theme='dark'] .theme-light-architecture {
   mask-image: linear-gradient(90deg, #000 0%, #000 8%, transparent 28%, transparent 72%, #000 92%, #000 100%);
 }
 
-#couple::before {
-  opacity: 0.16;
-}
-
 .wedding-scroll-scene > :not(.wedding-section-ornament),
 #home > * {
   position: relative;
