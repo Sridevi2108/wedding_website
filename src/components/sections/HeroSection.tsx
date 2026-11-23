@@ -23,7 +23,6 @@ interface HeroSectionProps {
   onPlantBlessingClick: () => void;
   onOpenMenu?: () => void;
   isDarkTheme: boolean;
-  activeSection: string;
   onActiveSectionChange?: (section: string) => void;
 }
 
@@ -36,7 +35,7 @@ interface TimeRemaining {
 }
 
 const PARTICLES_PER_SECTION = 24;
-const AMBIENT_SCENE_COUNT = 6;
+const AMBIENT_SCENE_COUNT = 7;
 
 const AMBIENT_PARTICLES = Array.from({ length: PARTICLES_PER_SECTION * AMBIENT_SCENE_COUNT }, (_, index) => {
   const sectionIndex = Math.floor(index / PARTICLES_PER_SECTION);
@@ -96,7 +95,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onPlantBlessingClick,
   onOpenMenu,
   isDarkTheme,
-  activeSection,
   onActiveSectionChange,
 }) => {
   // Target: Monday, 14 December 2026 06:15 AM IST (Asia/Kolkata)
@@ -310,9 +308,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       {/* Temple architecture is shown on the hero section */}
       {/* ══════════════════════════════════════════════════════════════════════ */}
       <div
-        className={`mobile-architecture-stage absolute inset-x-0 top-0 h-screen z-0 pointer-events-none select-none overflow-hidden ${
-          activeSection === 'home' ? 'mobile-architecture-stage--home' : ''
-        }`}
+        className="mobile-architecture-stage absolute inset-x-0 top-0 h-screen z-0 pointer-events-none select-none overflow-hidden"
         style={{
           transform: `translate3d(${mousePos.x * -8}px, ${mousePos.y * -5}px, 0px) rotateY(${mousePos.x * 0.4}deg)`,
           transformOrigin: '50% 60%',
@@ -508,6 +504,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex flex-col items-center">
             <div className="flex max-w-[360px] flex-wrap items-center justify-center gap-2">
               {[
+                { id: 'couple', label: '💑 The Couple' },
                 { id: 'events', label: '🎉 Events Timeline' },
                 { id: 'venue', label: '📍 Wedding Venue' },
                 { id: 'invitation', label: '💌 Invitation' },
@@ -530,6 +527,78 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <span className="font-serif-royal text-[9px] tracking-widest uppercase text-[#8C5514] mb-1">Scroll to Explore</span>
           <div className="w-4 h-7 rounded-full border border-[#C49A58] flex items-start justify-center p-1">
             <div className="w-1.5 h-1.5 rounded-full bg-[#98502F] animate-bounce" />
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="couple"
+        className="wedding-scroll-scene relative z-10 w-full min-h-screen flex flex-col items-center justify-center pt-16 pb-12 px-4 text-center"
+      >
+        <WeddingSectionOrnament />
+        <div className="relative z-[1] w-full max-w-4xl mx-auto">
+          <div className="mb-7 sm:mb-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#C49A58]/70 bg-[#FFFDF9]/90 px-4 py-1 shadow-sm">
+              <span className="text-xs text-[#C49A58]">✦</span>
+              <span className="font-serif-royal text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#98502F]">
+                The Couple
+              </span>
+              <span className="text-xs text-[#C49A58]">✦</span>
+            </div>
+            <h2 className="mt-3 font-serif-royal text-2xl sm:text-4xl font-bold text-[#7A281E]">
+              Meet the Bride &amp; Groom
+            </h2>
+            <p className="mt-1 font-cormorant text-base sm:text-lg italic text-[#98502F]">
+              Two hearts, one beautiful beginning
+            </p>
+          </div>
+
+          <div className="mx-auto grid w-full max-w-[13rem] grid-cols-1 gap-4 md:max-w-3xl md:grid-cols-2 md:gap-8">
+            {[
+              {
+                name: 'C. Vignesh',
+                role: 'The Groom',
+                image: '/assets/couple/vignesh.jpg',
+                alt: 'C. Vignesh, the groom',
+              },
+              {
+                name: 'S. Pavithra',
+                role: 'The Bride',
+                image: '/assets/couple/pavithra.jpg',
+                alt: 'S. Pavithra, the bride',
+              },
+            ].map((person) => (
+              <article
+                key={person.role}
+                className="theme-card theme-card--glass overflow-hidden rounded-2xl sm:rounded-3xl border border-[#C49A58]/75 shadow-xl"
+              >
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  <img
+                    src={person.image}
+                    alt={person.alt}
+                    className="h-full w-full object-cover object-top transition-transform duration-700 hover:scale-[1.03]"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#300609]/65 to-transparent" />
+                  <span className="absolute bottom-3 left-0 right-0 font-serif-royal text-[9px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-[#FFF1B8]">
+                    {person.role}
+                  </span>
+                </div>
+                <div className="px-2 py-3 sm:px-4 sm:py-4">
+                  <h3 className="font-serif-royal text-sm sm:text-2xl font-bold text-[#7A281E]">
+                    {person.name}
+                  </h3>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-3 text-[#C49A58]" aria-hidden="true">
+            <span className="h-px w-10 bg-gradient-to-r from-transparent to-[#C49A58]" />
+            <span className="text-lg">✦</span>
+            <span className="text-xl">🪷</span>
+            <span className="text-lg">✦</span>
+            <span className="h-px w-10 bg-gradient-to-l from-transparent to-[#C49A58]" />
           </div>
         </div>
       </section>
@@ -603,7 +672,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <p className="font-serif-royal text-xs text-[#766B60] mt-1 font-semibold">
                           {ev.timeStr}
                         </p>
-                        <p className="font-cormorant italic text-xs font-bold text-[#8C5514] mt-1">
+                        <p className="font-cormorant italic text-xs font-bold text-[#98502F] mt-1">
                           {ev.venueName}, {ev.city}
                         </p>
                       </div>
@@ -678,7 +747,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     <p className="font-serif-royal text-[11px] text-[#766B60] mt-0.5">
                       {ev.timeStr}
                     </p>
-                    <p className="font-cormorant text-xs font-bold leading-snug text-[#8C5514] mt-0.5">
+                    <p className="font-cormorant text-xs font-bold leading-snug text-[#98502F] mt-0.5">
                       {ev.venueName}
                     </p>
 

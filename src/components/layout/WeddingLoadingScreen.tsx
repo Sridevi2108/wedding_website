@@ -15,8 +15,8 @@ export const WeddingLoadingScreen: React.FC<WeddingLoadingScreenProps> = ({ onCo
   const [messageIndex, setMessageIndex] = useState(0);
 
   useEffect(() => {
-    const leaveTimer = window.setTimeout(() => setIsLeaving(true), 1700);
-    const completeTimer = window.setTimeout(onComplete, 2250);
+    const leaveTimer = window.setTimeout(() => setIsLeaving(true), 2900);
+    const completeTimer = window.setTimeout(onComplete, 3500);
 
     return () => {
       window.clearTimeout(leaveTimer);

@@ -358,14 +358,6 @@ html[data-theme='dark'] .theme-light-architecture {
   html[data-theme='dark'] .theme-dark-architecture--mobile {
     display: block;
   }
-
-  .mobile-architecture-stage:not(.mobile-architecture-stage--home) .theme-light-architecture img {
-    display: none !important;
-  }
-
-  .mobile-architecture-stage:not(.mobile-architecture-stage--home) .theme-dark-architecture--mobile {
-    background-image: none !important;
-  }
 }
 
 .wedding-scroll-scene,
@@ -386,6 +378,10 @@ html[data-theme='dark'] .theme-light-architecture {
   opacity: 0.1;
   pointer-events: none;
   mask-image: linear-gradient(90deg, #000 0%, #000 8%, transparent 28%, transparent 72%, #000 92%, #000 100%);
+}
+
+#couple::before {
+  opacity: 0.16;
 }
 
 .wedding-scroll-scene > :not(.wedding-section-ornament),

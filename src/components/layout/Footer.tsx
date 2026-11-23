@@ -75,6 +75,7 @@ export const Footer: React.FC<FooterProps> = ({
           <span className="font-bold text-[#45352A]">14 December 2026</span>
           <span>|</span>
           <button onClick={() => onNavClick('home')} className="hover:text-[#98502F] cursor-pointer">Home</button>
+          <button onClick={() => onNavClick('couple')} className="hover:text-[#98502F] cursor-pointer">The Couple</button>
           <button onClick={() => onNavClick('events')} className="hover:text-[#98502F] cursor-pointer">Events Timeline</button>
           <button onClick={() => onNavClick('venue')} className="hover:text-[#98502F] cursor-pointer">Wedding Venues</button>
           <button onClick={() => onNavClick('invitation')} className="hover:text-[#98502F] cursor-pointer">Digital Invitation</button>
